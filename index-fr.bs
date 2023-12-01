@@ -1,5 +1,5 @@
 <pre class='metadata'>
-Title: Cas d'utilisation & Processus commerciaux
+Title: Cas d'utilisation & Processus métiers
 Shortname: erfgoedpod-usecases
 Level: 1
 Status: LD
@@ -45,7 +45,7 @@ table th a[href] {
 Ce document fait partie des spécifications du *Réseau de Patrimoine Numérique Décentralisé* produites par le projet ErfgoedPod du [Réseau du Patrimoine Numérique Néerlandais (NDE)](https://netwerkdigitaalerfgoed.nl/en/), [meemoo - Institut Flamand pour les Archives](https://meemoo.be) et [Université de Gand - IDLab](http://idlab.ugent.be) :
 
 1. [Architecture du Réseau de Patrimoine Numérique Décentralisé](/architecture/) 
-2. [Cas d'utilisation & Processus commerciaux](/usecases/) (ce document)
+2. [Cas d'utilisation & Processus métiers](/usecases/) (ce document)
 3. [Infrastructure commune dans les Institutions Culturelles du Patrimoine](/common-setups/)
 
 Ce projet contribue également aux spécifications complémentaires suivantes du projet [ResearcherPod](https://mellonscholarlycommunication.github.io/spec-overview) :1. [Orchestrator](https://mellonscholarlycommunication.github.io/spec-orchestrator/)
@@ -88,8 +88,8 @@ ErfgoedPod fournit une petite étude de fond,
 un design architectural et une description des cas d'utilisation pertinents pour appliquer ces protocoles et composants génériques dans le domaine du patrimoine numérique. 
 Ce document capture les cas d'utilisation qui proviennent du programme NDE-Usable et le design de haut niveau d'un réseau décentralisé pour les artefacts de patrimoine numérique. 
 À cette fin, 
-il identifie une liste de rôles et de services représentatifs dans le Réseau du Patrimoine Numérique Néerlandais et les processus commerciaux qu'ils devraient être capables d'exécuter. 
-Ces processus commerciaux servent ensuite de base à une mise en œuvre de preuve de concept de ce réseau, comme décrit plus en détail dans la [[architecture-nde|spécification d'architecture]].
+il identifie une liste de rôles et de services représentatifs dans le Réseau du Patrimoine Numérique Néerlandais et les processus métiers qu'ils devraient être capables d'exécuter. 
+Ces processus métiers servent ensuite de base à une mise en œuvre de preuve de concept de ce réseau, comme décrit plus en détail dans la [[architecture-nde|spécification d'architecture]].
 
 # Contexte du Réseau Néerlandais du Patrimoine Numérique
 
@@ -492,7 +492,7 @@ Cela facilite la création de liens, de backlinks ou de métadonnées augmentée
 ## Perspective de l'institution du patrimoine culturel interagissant avec le registre des ensembles de données ##
 
 Cette section adopte la perspective d'une [=Institution du Patrimoine Culturel=] interagissant avec un Service de [=Registre des Ensembles de Données=], qui met en œuvre la conception de la [Fonction de registre des ensembles de données](https://docs.google.com/document/d/1-E4DIwlzbL8Esv5YtHbVUXkT_U3pCprFDSI-hjiKf90/edit?ts=5fbd2dcd#) en utilisant l'architecture Solid et ResearcherPod.
-Cela implique des processus commerciaux partagés entre les deux parties où l'institution demande un service (c'est-à-dire ajouter, mettre à jour ou supprimer des résumés d'ensembles de données du registre des ensembles de données) et le [=Registre des Ensembles de Données=] répond à cette demande.
+Cela implique des processus métiers partagés entre les deux parties où l'institution demande un service (c'est-à-dire ajouter, mettre à jour ou supprimer des résumés d'ensembles de données du registre des ensembles de données) et le [=Registre des Ensembles de Données=] répond à cette demande.
 Ce dernier comprend l'issue possible du service réalisé.
 
 ### (BP3) Une institution du patrimoine culturel s'enregistre auprès d'un registre de données ### {#BP3}
