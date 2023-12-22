@@ -1,11 +1,13 @@
 <pre class='metadata'>
-Title: Use Cases & Business Processes
+Title: Cas d'utilisation & Processus métiers
 Shortname: erfgoedpod-usecases
 Level: 1
 Status: LD
 URL: https://erfgoedpod.github.io/usecases
 Editor: Miel Vander Sande, [meemoo](https://meemoo.be), miel.vandersande@meemoo.be
-Abstract: This specification describes the different use cases for exchanging digital heritage data in the Netherlands and Flanders using principles from Solid and the Researcher Pod project.
+!Translation: David Reymond [IMSIC - Université de Toulon](http://www.univ-tln.fr), david.reymond@univ-tln.fr
+
+Abstract: Cette spécification décrit les différents cas d'utilisation pour l'échange de données de patrimoine numérique aux Pays-Bas et en Flandre en utilisant les principes de Solid et du projet Researcher Pod.
 Markup Shorthands: markdown yes
 </pre>
 
@@ -40,577 +42,517 @@ table th a[href] {
 }
 </style>
 
-# Set of documents
+# Ensemble de documents
 
-This document is one of the *Decentralized Digital Heritage Network* specifications produced by the ErfgoedPod project by the [Dutch Digital Heritage Network (NDE)](https://netwerkdigitaalerfgoed.nl/en/), [meemoo - Flemish Institute for Archives](https://meemoo.be) and [Ghent University - IDLab](http://idlab.ugent.be):
+Ce document fait partie des spécifications du *Réseau de Patrimoine Numérique Décentralisé* produites par le projet ErfgoedPod du [Réseau du Patrimoine Numérique Néerlandais (NDE)](https://netwerkdigitaalerfgoed.nl/en/), [meemoo - Institut Flamand pour les Archives](https://meemoo.be) et [Université de Gand - IDLab](http://idlab.ugent.be) :
 
-1. [Decentralized Digital Heritage Network architecture](/architecture/) 
-2. [Use cases & Business processes](/usecases/) (this document)
-3. [Common infrastructure in Cultural Heritage Institutions](/common-setups/)
+1. [Architecture du Réseau de Patrimoine Numérique Décentralisé](/architecture/) 
+2. [Cas d'utilisation & Processus métiers](/usecases/) (ce document)
+3. [Infrastructure commune dans les Institutions Culturelles du Patrimoine](/common-setups/)
 
-This project also contributes to the following companion specifications of the [ResearcherPod](https://mellonscholarlycommunication.github.io/spec-overview) project:
-
-1. [Orchestrator](https://mellonscholarlycommunication.github.io/spec-orchestrator/) 
+Ce projet contribue également aux spécifications complémentaires suivantes du projet [ResearcherPod](https://mellonscholarlycommunication.github.io/spec-overview) :1. [Orchestrator](https://mellonscholarlycommunication.github.io/spec-orchestrator/)
 2. [Data Pod](https://mellonscholarlycommunication.github.io/spec-datapod/)
-3. [Rule language](https://mellonscholarlycommunication.github.io/spec-rulelanguage/)
-4. [Artefact Lifecycle Event Log](https://mellonscholarlycommunication.github.io/spec-eventlog/)
+3. [Langage de règle](https://mellonscholarlycommunication.github.io/spec-rulelanguage/)
+4. [Journal des événements du cycle de vie de l'artéfact](https://mellonscholarlycommunication.github.io/spec-eventlog/)
 5. [Notifications](https://mellonscholarlycommunication.github.io/spec-notifications/)
-6. [Collector](https://mellonscholarlycommunication.github.io/spec-collector/)
+6. [Collecteur](https://mellonscholarlycommunication.github.io/spec-collector/)
 
 Introduction
 =======================================================
 
-The [NDE-Usable](https://netwerkdigitaalerfgoed.nl/bruikbaar/) programme of the [Dutch Digital Heritage Network (NDE)](https://netwerkdigitaalerfgoed.nl/en/) 
-aim to redesign the way cultural heritage institutions and applications (eg. service portals that allow users to search for specific heritage data) exchange data.
-The current landscape shows a cascade of tightly coupled data aggregators,
-which has shown to be inflexible and lead to brittle integrations. 
-As a result, both the data providing institutions and the aggregators have high maintenance costs, 
-which are funds better spend elsewhere. 
-Moreover, 
-it leads to data duplication, with a subsequent loss of control for the cultural heritage institutions.
+Le programme [NDE-Usable](https://netwerkdigitaalerfgoed.nl/bruikbaar/) du [Réseau néerlandais du patrimoine numérique (NDE)](https://netwerkdigitaalerfgoed.nl/en/) 
+vise à repenser la manière dont les institutions du patrimoine culturel et les applications (par exemple, les portails de services qui permettent aux utilisateurs de rechercher des données patrimoniales spécifiques) échangent des données.
+Le paysage actuel montre une cascade d'agrégateurs de données étroitement couplés,
+ce qui s'est avéré inflexible et conduit à des intégrations fragiles.
+En conséquence, les institutions fournissant des données et les agrégateurs ont des coûts de maintenance élevés,
+ce qui pourrait être mieux dépensé ailleurs.
+De plus,
+cela entraîne une duplication des données, avec une perte de contrôle subséquente pour les institutions du patrimoine culturel.
 
-NDE-Usable envisions a discovery infrastructure that guides applications to the relevant original data sources, 
-rather than aggregate and republish their data.
-The design integrates applications with institutions's collection data in a more loosely-coupled manner, 
-enabling institutions to reorientate their developed service integrations more easily to other vendors. 
-To this end, 
-NDE-Usable provides implementation guidelines, interoperability requirements and essential discovery services, 
-ie. a register for dataset descriptions and a search index for shared terminology sources (Network of Terms).
+NDE-Usable envisage une infrastructure de découverte qui guide les applications vers les sources de données originales pertinentes,
+plutôt que d'agréger et de republier leurs données.
+Le design intègre les applications avec les données de collection des institutions d'une manière plus librement couplée,
+permettant aux institutions de réorienter plus facilement leurs intégrations de services développées vers d'autres fournisseurs.
+À cette fin,
+NDE-Usable fournit des lignes directrices d'implémentation, des exigences d'interopérabilité et des services de découverte essentiels,
+c'est-à-dire un registre pour les descriptions d'ensembles de données et un index de recherche pour les sources de terminologie partagées (Network of Terms).Les principes du Web décentralisé et de Solid résonnent fortement avec la conception du réseau NDE-Usable. 
+Ainsi, le projet ErfgoedPod explore ce à quoi pourrait ressembler une possible mise en œuvre de la vision NDE-Usable lors de l'application de l'écosystème Solid. 
+Le projet produit une possible conception d'un réseau d'échange décentralisé pour les données du patrimoine numérique. 
+ErfgoedPod partage les objectifs de l'infrastructure NDE-Usable actuelle, mais est considéré comme un effort de recherche, 
+et est donc développé indépendamment avec un niveau de préparation technologique plus bas. 
+En essence, 
+le projet teste si les principes d'un réseau social décentralisé - les acteurs annonçant, partageant et suivant l'information - sont une base durable pour l'échange de données de patrimoine numérique.
 
-The principles of Decentralized Web and Solid resonate strongly with NDE-Usable's network design.
-Therefore, the ErfgoedPod project explores what a possible implementation of the NDE-Usable vision could look like when applying the Solid ecosystem.
-The project outputs a possible design of a decentralized exchange network for digital heritage data.
-ErfgoedPod shares the goals of the current NDE-Usable infrastructure, but is considered a research effort, 
-and is therefore developed independently with a lower technology readiness level.
-In essence, 
-the project tests whether the principles of a decentralized social network - actors announcing, sharing & following information - are a sustainable basis for exchanging digital heritage data.
+Les principaux résultats du projet sont des protocoles et des composants pour créer des réseaux d'échange décentralisés génériques pour divers types de métadonnées se rapportant aux artefacts, 
+ce qui est un travail conjoint avec le projet [ResearcherPod](https://mellonscholarlycommunication.github.io/spec-overview). 
+De plus, 
+ErfgoedPod fournit une petite étude de fond, 
+un design architectural et une description des cas d'utilisation pertinents pour appliquer ces protocoles et composants génériques dans le domaine du patrimoine numérique. 
+Ce document capture les cas d'utilisation qui proviennent du programme NDE-Usable et le design de haut niveau d'un réseau décentralisé pour les artefacts de patrimoine numérique. 
+À cette fin, 
+il identifie une liste de rôles et de services représentatifs dans le Réseau du Patrimoine Numérique Néerlandais et les processus métiers qu'ils devraient être capables d'exécuter. 
+Ces processus métiers servent ensuite de base à une mise en œuvre de preuve de concept de ce réseau, comme décrit plus en détail dans la [[architecture-nde|spécification d'architecture]].
 
-The main project outcomes are protocols and components for creating generic decentralized exchange networks for various types of metadata pertaining artefacts, 
-which is joint work with the [ResearcherPod](https://mellonscholarlycommunication.github.io/spec-overview) project.
-Additionally, 
-ErfgoedPod provides a small background study, 
-an architectural design and a descriptions of relevant use cases to apply these generic protocols and components in the digital heritage domain.
-This document captures the use cases that originate from the NDE-Usable programme and the high-level design of a decentralized network for digital heritage artefacts.
-To that end, 
-it identifies a list of representative roles and services in the Dutch Digital Heritage Network and the business processes that they should be able to execute.
-These business processes then serve as a basis for a proof-of-concept implementation of such network, as further outlined in the [[architecture-nde|architecture specification]].  
+# Contexte du Réseau Néerlandais du Patrimoine Numérique
 
-# Context Dutch Digital Heritage Network
+Le programme NDE-Usable tente de concevoir une infrastructure de réseau intermédiaire qui facilite- Portails Web destinés aux utilisateurs finaux pour découvrir et consommer des données sur des objets de patrimoine culturel ; et 
+- [=Institutions du patrimoine culturel=] pour annoncer et fournir des données sur les collections et les objets du patrimoine culturel.
 
-The NDE-Usable programme attempts to design a intermediary network infrastructure that facilitates 
+NDE-Usable évite délibérément la pratique non durable de l'agrégation de données en 
+concevant un réseau de services intermédiaires qui aident les portails Web à naviguer vers des ensembles de données pertinents que les institutions hébergent et publient elles-mêmes.
+En basant une telle conception sur Solid,
+le projet ErfgoedPod organise la communication entre les institutions, 
+les portails Web et les services de médiation en utilisant des protocoles standardisés et d'une manière très peu couplée.
+Cela augmente considérablement la mobilité des données : une intégration avec une instance de service peut être remplacée par une autre à moindre coût.
 
-- End-user Web portals to discover and consume data about cultural heritage objects; and
-- [=Cultural heritage institutions=] to advertise and provide data about cultural heritage collections and objects.
+## Conception d'un réseau de patrimoine numérique décentralisé
 
-NDE-Usable deliberately avoids the unsustainable practice of aggregating data by 
-designing a network of intermediary services that help Web portals navigate to relevant datasets that institutions host and publish themselves.
-By basing such design on Solid,
-the ErfgoedPod project organizes communication between the institutions, 
-the Web portals and the mediating services using standardized protocols and in a very loose-coupled fashion.
-This highly increases data mobility: an integration with a service instance can be replaced with another at lower cost. 
+ErfgoedPod fournit des conceptions génériques d'une architecture de réseau et de composants logiciels, 
+décrits dans la [[architecture-nde#components|spécification d'architecture]].
+Cette conception peut être utilisée pour permettre à différents types d'acteurs d'interagir *à propos* d'un artefact.
+Les types d'acteurs incluent les portails Web, les institutions du patrimoine culturel, mais aussi des services à valeur ajoutée qui peuplent l'espace de réseau intermédiaire, tels que les dépôts pour la préservation à long terme ou les registres de données.
+Ils peuvent assumer un ou plusieurs des rôles suivants :
 
-## Design of a Decentralized Digital Heritage Network
+- [[architecture-nde#pod|Pod de patrimoine numérique]] : stocker et fournir des données dans le réseau, généralement les institutions du patrimoine culturel ;
+- [[architecture-nde#hubs|Concentrateur de services de patrimoine numérique]] : consommer des données des Data Pods pour effectuer un service sur ces données, généralement les fournisseurs de services à valeur ajoutée ;
+- [[architecture-nde#collector|Collecteur]] : découvrir et recueillir des données du réseau pour un traitement ultérieur ou pour les présenter aux utilisateurs finaux, généralement les portails Web, mais dans certains cas les fournisseurs de services. Chaque rôle peut avoir plusieurs instances,  éventuellement partitionnées en fonction de la région ou du domaine, créant une sélection de pôles de service avec lesquels interagir.
 
-ErfgoedPod provides generic designs of a network architecture and software components,
-described in the [[architecture-nde#components|architecture specification]].
-This design can be used to enable different types of actors to interact *about* an artefact.
-Actors types include the Web portals, the Cultural heritage institutions, but also value-adding services that populate the intermediary network space, such as repositories for long-term preservation or data registries.
-They can take up one or more of the following roles:
+Contrairement aux fournisseurs de métadonnées, c'est à l'instance de décider comment le service est mis en œuvre. 
+Cependant, si un pôle de service devait fournir des données à d'autres acteurs,  il doit adopter un Pod.
+Il n'est donc pas rare qu'un acteur combine plusieurs rôles, surtout lorsque le service comprend le partage de données sous une autre forme ou de quelque autre manière. 
+Par exemple, un fournisseur de service de résumé (pôle de service du patrimoine numérique) peut découvrir et collecter des données (collecteur) et stocker les résumés pour redistribution (Pod du patrimoine numérique). 
 
-- [[architecture-nde#pod|Digital Heritage Pod]]: storing and providing data in the network, typically the Cultural heritage institutions;
-- [[architecture-nde#hubs|Digital Heritage Service Hub]]: consuming data from Data Pods to perform a service on top of that data, typically the value-adding service providers;
-- [[architecture-nde#collector|Collector]]: discovering and collecting data from the network for further processing or to present it to end-users, typically the Web portals, but in some cases the service providers.
+Sur le réseau, les différents acteurs interagissent entre eux en envoyant des notifications, qui peuvent être regroupées selon les rôles impliqués. 
 
-Each role can have multiple instances, 
-possibly partitioned based on region or domain, creating a selection of Service Hubs to interact with.
-Unlike the metadata providers, 
-it is up to the instance how the service is implemented.
-However, if a service hub would provide data to other actors, 
-it has to adopt a Pod.
-Hence, is not uncommon for an actor to combine several roles, 
-especially when the service includes re-sharing data in some other shape or form. 
-For instance, a summarization service provider (Digital Heritage Service Hub) can discover and collect data (Collector) 
-and store the summaries for redistribution (Digital Heritage Pod). 
-
-On the network, the different actors interact with each other by sending notifications,
-which can be grouped according to the roles that are involved. 
-
-1. **Pod - Pod**: one institution stores an artefact (ie. digital heritage object or collection) and draws the attention of another institution to that artefact. Examples are two institutions sharing metadata because of a loan, or they do mutual enriching their collections with the metadata of the other party.
-2. **Data Pod - Service Hub**: one institution requests a service from a service provider. Examples include institutions wanting to register their dataset in a dataset registry or institutions starting an ingest process in a digital archive.
-3. **Service Hub - Service Hub**: one service provider involves another service provider in order to complete a service. Examples include a dataset summarization service depending on a dataset registry service.
-4. **Collector - Pod**: an end-user portal collects collection data from different institutions. Examples include a thematic website about a certain topic that collects cross-institutional data about that topic.
-5. **Collector - Pod**: an end-user portal depends on a service provider to collect data. Examples include the discovery of institutional data pods or for enrichments on that data.
-
-An illustration of the results is given in the diagram below.
+1. **Pod - Pod** : une institution stocke un artefact (c'est-à-dire un objet ou une collection de patrimoine numérique) et attire l'attention d'une autre institution sur cet artefact. Des exemples sont deux institutions partageant des métadonnées en raison d'un prêt, ou elles enrichissent mutuellement leurs collections avec les métadonnées de l'autre partie.
+2. **Pod de données - Pôle de service** : une institution demande un service à un fournisseur de service. Des exemples incluent des institutions voulant enregistrer leur ensemble de données dans un registre d'ensembles de données ou des institutions commençant un processus d'ingestion dans une archive numérique.
+3. **Pôle de service - Pôle de service** : un fournisseur de service implique un autre fournisseur de service afin de compléter un service. Des exemples incluent un service de résumé d'ensemble de données dépendant d'un service de registre d'ensemble de données.
+4. **Collecteur - Pod** : un portail d'utilisateur final collecte des données de collection provenant de différentes institutions. Des exemples incluent un site web thématique sur un certain sujet qui collecte des données interinstitutionnelles sur ce sujet.
+5. **Collecteur - Pod** : un portail d'utilisateur final dépend d'un fournisseur de service pour collecter des données. Des exemples incluent la découverte de pods de données institutionnelles ou pour des enrichissements sur ces données.Une illustration des résultats est donnée dans le diagramme ci-dessous.
 
 <figure>
 	<img src="images/NDE-overzicht.svg" width="100%" />
 	<figcaption>
-  The ErfgoedPod project presents an architecture that enable interactions between digital heritage institutions, service providers and end-user portals.
+  Le projet ErfgoedPod présente une architecture qui permet les interactions entre les institutions patrimoniales numériques, les fournisseurs de services et les portails utilisateurs finaux.
   </figcaption>
 </figure>
 
-The Pods and Service Hubs contain the same minimal set of components: 
-- an [=Inbox=] resource to receive [[ldn|Linked Data Notifications]] ([[architecture-nde#pod]]);
-- a `Dashboard` and an `Orchestrator` with `Rulebook` to participate in the network ([[architecture-nde#participate]])
-- a `Query index` and a [[architecture-nde#artefact-lifecycle-event-log|Artefact Lifecycle Event Log]] to allow their infomation to be collected by others ([[architecture-nde#collection-information-from-a-decentralized-digital-heritage-network]])
+Les Pods et les Hubs de Service contiennent le même ensemble minimal de composants : 
+- une ressource [=Inbox=] pour recevoir les [[ldn|Notifications de Données Liées]] ([[architecture-nde#pod]]);
+- un `Tableau de bord` et un `Orchestrateur` avec `Règlement` pour participer au réseau ([[architecture-nde#participate]])
+- un `Index de requête` et un [[architecture-nde#artefact-lifecycle-event-log|Registre d'événements de cycle de vie des Artefacts]] pour permettre la collecte de leurs informations par d'autres ([[architecture-nde#collection-information-from-a-decentralized-digital-heritage-network]])
 
-The complete setup can be summarized in a component blueprint, which can be used to implement any component in the Decentralized Digital Heritage Network.
-An overview is illustrated in the figure below.
+La configuration complète peut être résumée dans un schéma de composant, qui peut être utilisé pour mettre en œuvre n'importe quel composant dans le Réseau Patrimonial Numérique Décentralisé.
+Une vue d'ensemble est illustrée dans la figure ci-dessous.
 
 <pre class=include>
 path: images/nde-basic-setup.svg
 </pre>
 
-The remainder of this section provides more detail on how the current cultural heritage landscape would populate such high-level design.
-In the tables below, we aim to establish a shared understanding the different [[#actors]] (who is participating?), [[#roles]] (what is their function?), and [[#artefacts]] (what are they exchanging?) throughout this project and related initiatives.
-The terminology originates from the [high level design](https://github.com/netwerk-digitaal-erfgoed/high-level-design/blob/master/glossary.md) and the [datasets requirements](https://netwerk-digitaal-erfgoed.github.io/requirements-datasets) 
-and is aligned with the dutch architecture standard \[DERA](https://netwerkdigitaalerfgoed.nl/activiteiten/dera/) and the flemish vocabulary standard \[OSLO](https://data.vlaanderen.be/ns#Vocabularia), .
+Le reste de cette section donne plus de détails sur la manière dont le paysage actuel du patrimoine culturel peuplerait une telle conception de haut niveau.
+Dans les tableaux ci-dessous, nous visons à établir une compréhension partagée des différents [[#actors]] (qui participe ?), [[#roles]] (quelle est leur fonction ?), et [[#artefacts]] (qu'échangent-ils ?) tout au long de ce projet et des initiatives connexes.
+La terminologie provient du [design de haut niveau](https://github.com/netwerk-digitaal-erfgoed/high-level-design/blob/master/glossary.md) et des [exigences des ensembles de données](https://netwerk-digitaal-erfgoed.github.io/requirements-datasets) 
+et est alignée avec la norme d'architecture néerlandaise \[DERA](https://netwerkdigitaalerfgoed.nl/activiteiten/dera/) et la norme de vocabulaire flamand \[OSLO](https://data.vlaanderen.be/ns#Vocabularia) , .
 
-## Actors in the network ## {#actors}
+## Acteurs dans le réseau ## {#actors}
 
-The Digital Heritage Network (NDE) brings together a large number of active parties in one interoperable network.
-In [[architecture-nde|Decentralized Digital Heritage Network architecture]], these parties are defined as [[architecture-nde#actor|Actors]].
-An [[architecture-nde#actor|actor]] represents a human or organizational stakeholder that needs to interact with the digital heritage data in the network.
-The list of possible actor types is given below. 
+Le Réseau du Patrimoine Numérique (NDE) rassemble un grand nombre de parties actives dans un réseau interopérable.
+Dans l'[[architecture-nde|architecture du Réseau Décentralisé du Patrimoine Numérique]], ces parties sont définies comme des [[architecture-nde#acteur|Acteurs]].
+Un [[architecture-nde#acteur|acteur]] représente une partie prenante humaine ou organisationnelle qui a besoin d'interagir avec les données du patrimoine numérique dans le réseau.
+La liste des types d'acteurs possibles est donnée ci-dessous.
 
 <table>
   <thead>
     <tr>
       <th></th>
-      <th>Term</th>
+      <th>Terme</th>
       <th>Description</th>
-      <th>DERA (NL) [Actoren](https://dera.netwerkdigitaalerfgoed.nl/index.php/Actoren)</th>
-      <th>OSLO (VL) [Cultureel Erfgoed Event](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-event)</a></th>
+      <th>DERA (NL) [Acteurs](https://dera.netwerkdigitaalerfgoed.nl/index.php/Actoren)</th>
+      <th>OSLO (VL) [Evénement du Patrimoine Culturel](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-event)</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>CHI</td>
-      <td><dfn export>Cultural Heritage Institution</dfn></td>
-      <td>Organisation that manages digital heritage information and wants to share this information over the network. </td>
+      <td><dfn export>Institution du Patrimoine Culturel</dfn></td>
+      <td>Organisation qui gère l'information sur le patrimoine numérique et qui souhaite partager cette information sur le réseau.</td>
       <td>Erfgoedinstelling</td>
       <td>Organisatie</td>
     </tr>
     <tr>
       <td>O</td>
-      <td><dfn export>Provider</dfn></td>
-      <td>Actor that selects, enriches or transforms cultural heritage information to provide certain services.</td>
+      <td><dfn export>Fournisseur</dfn></td>
+      <td>Acteur qui sélectionne, enrichit ou transforme l'information sur le patrimoine culturel pour fournir certains services.</td>
       <td>Leverancier</td>
       <td rowspan="2">Agent</td>
     </tr>
     <tr>
       <td>U</td>
-      <td><dfn export>User</dfn></td>
-      <td>Anyone who wants to use cultural heritage information.</td>
+      <td><dfn export>Utilisateur</dfn></td>
+      <td>N'importe qui souhaite utiliser l'information sur le patrimoine culturel.</td>
       <td>Gebruiker</td>
     </tr>
   </tbody>
 </table>
 
-## Artefacts in the network ## {#artefacts}
+## Artefacts dans le réseau ## {#artefacts}
 
-On the Digital Heritage Network, actors can exchange information pertaining to certain data objects related to digital heritage. 
-These data objects are denoted by the [[architecture-nde|Decentralized Digital Heritage Network architecture]] as artefacts.
-An [[architecture-nde#artefact|artefact]] as the object of an interaction between actors. Hence, within the scope of this project, actors exchange messages about an artefact, not the artefact itself.
+Sur le réseau du Patrimoine Numérique, les acteurs peuvent échanger des informations concernant certains objets de données liés au patrimoine numérique. 
+Ces objets de données sont désignés par l'[[architecture-nde|architecture du réseau décentralisé du Patrimoine Numérique]] comme des artefacts.
+Un [[architecture-nde#artefact|artefact]] comme l'objet d'une interaction entre les acteurs. Ainsi, dans le cadre de ce projet, les acteurs échangent des messages à propos d'un artefact, et non l'artefact lui-même.
 
-The list of relevant digital heritage artefacts is given below.
-We distinguish between digital heritage artefacts: artefacts with direct cultural heritage value and "metadata" artefacts: artefacts that are about other artefacts.
-
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Term</th>
-      <th>Description</th>
-      <th>DERA (NL) [Bedrijfsobjecten](https://dera.netwerkdigitaalerfgoed.nl/index.php/Bedrijfsobjecten)</th>
-      <th>OSLO (VL) [Cultureel Erfgoed Object](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-object)</a></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th colspan="5">Digital heritage artefacts</th>
+La liste des artefacts pertinents du patrimoine numérique est donnée ci-dessous.
+Nous distinguons entre les artefacts du patrimoine numérique : les artefacts ayant une valeur patrimoniale culturelle directe et les artefacts "métadonnées" : les artefacts qui concernent d'autres artefacts.<td>Profil de l'organisation.</td>
+      <td>Organisatieprofiel</td>
+      <td>Organisatie</td>
     </tr>
     <tr>
-      <td>O</td>
-      <td><dfn export>Object</dfn></td>
-      <td>Generic representation of an entity.</td>
-      <td>Business Object</td>
-      <td>Entiteit</td>
-    </tr>
-    <tr>
-      <td>CO</td>
-      <td><dfn export>Cultural Heritage Object</dfn></td>
-      <td>Object with cultural heritage value.</td>
-      <td>Cultuurhistorisch object</td>
-      <td rowspan="2">Informatie Object</td>
-    </tr>
-    <tr>
-      <td>IO</td>
-      <td><dfn export>Information Object</dfn></td>
-      <td>Self-contained information related to a Cultural Heritage Object.</td>
-      <td>Informatieobject</td>
-    </tr>
-    <tr>
-      <td>E</td>
-      <td><dfn export>Enrichment</dfn></td>
-      <td>Information that is not explicitly present in the original Cultural Heritage Object.</td>
-      <td>Verrijking</td>
+      <td>LI</td>
+      <td><dfn export>Location</dfn></td>
+      <td>Lieu.</td>
+      <td>Locatie</td>
       <td>/</td>
     </tr>
     <tr>
-      <td>D</td>
-      <td><dfn export>Dataset</dfn></td>
-      <td>Collection of Cultural Heritage Objects.</td>
-      <td>Dataset</td>
-      <td>Collectie</td>
-    </tr>
-    <tr>
-      <td>T</td>
-      <td><dfn export>Term</dfn></td>
-      <td>Word or phrase to denote a concept.</td>
-      <td>Term</td>
+      <td>PF</td>
+      <td><dfn export>Data Profile</dfn></td>
+      <td>Profil de données.</td>
+      <td>Data profiel</td>
       <td>/</td>
     </tr>
     <tr>
-      <td>TS</td>
-      <td><dfn export>Term Source</dfn></td>
-      <td>Source of controlled sets of terms.</td>
-      <td>Terminologiebron</td>
+      <td>EI</td>
+      <td><dfn export>Enquiry</dfn></td>
+      <td>Demande.</td>
+      <td>Vraag</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>DI</td>
+      <td><dfn export>Data Set</dfn></td>
+      <td>Ensemble de données.</td>
+      <td>Data Set</td>
+      <td>Gegevensverzameling</td>
+    </tr>
+    <tr>
+      <td>TI</td>
+      <td><dfn export>Time Interval</dfn></td>
+      <td>Intervalle de temps.</td>
+      <td>Tijdsinterval</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>TA</td>
+      <td><dfn export>Technology Area</dfn></td>
+      <td>Domaine technologique.</td>
+      <td>Technologisch gebied</td>
       <td>/</td>
     </tr>
   </tbody>
-  <tbody>
-    <tr>
-      <th colspan="5">Metadata artefacts</th>
-    </tr>
-    <tr>
-      <td>MI</td>
-      <td><dfn export>Organisation Profile</dfn></td>
-      <td>A machine actionable profile of the organization with basic details (eg. identifier, name).</td>
-      <td>(Organisatie profiel)</td>
+</table><td>Un profil d'organisation exploitable par machine avec des détails de base (par exemple, identifiant, nom).</td>
+      <td>(Profil d'organisation)</td>
       <td>/</td>
     </tr>
     <tr>
       <td>MC</td>
-      <td><dfn export>Metadata<br>Cultural Heritage Object</dfn></td>
-      <td>Descriptive document about a Cultural Heritage Object.</td>
-      <td>Metadata Cultuurhistorisch object</td>
+      <td><dfn export>Metadata<br>Objet du Patrimoine Culturel</dfn></td>
+      <td>Document descriptif sur un Objet du Patrimoine Culturel.</td>
+      <td>Metadata Objet du Patrimoine Culturel</td>
       <td>/</td>
     </tr>
     <tr>
       <td>ME</td>
-      <td><dfn export>Metadata<br>Enrichment</dfn></td>
-      <td>Descriptive document about an enrichment.</td>
-      <td>Metadata Verrijkingen</td>
+      <td><dfn export>Metadata<br>Enrichissement</dfn></td>
+      <td>Document descriptif sur un enrichissement.</td>
+      <td>Metadata Enrichissements</td>
       <td>/</td>
     </tr>
     <tr>
       <td>MD</td>
-      <td><dfn export>Metadata<br>Dataset</dfn></td>
-      <td>Descriptive document about a Dataset.</td>
-      <td>Metadata Dataset</td>
+      <td><dfn export>Metadata<br>Ensemble de données</dfn></td>
+      <td>Document descriptif sur un Ensemble de données.</td>
+      <td>Metadata Ensemble de données</td>
       <td>/</td>
     </tr>
     <tr>
       <td>MT</td>
-      <td><dfn export>Metadata Term Source</dfn></td>
-      <td>Descriptive document about a Term Source.</td>
-      <td>Metadata Terminologiebron</td>
+      <td><dfn export>Metadata Source de Terme</dfn></td>
+      <td>Document descriptif sur une Source de Terme.</td>
+      <td>Metadata Source de Terminologie</td>
       <td>/</td>
     </tr>
   </tbody>
 </table>
 
-## Roles in the network ## {#roles}
+## Rôles dans le réseau ## {#roles}
 
-Actors can take up different roles in the Digital Heritage Network depending om whether they provide data about artefacts, consume data about artefacts or provide additional services that in some way affect the artefact's lifecycle.
-The list of possible roles is given below.
-
-<table>
+Les acteurs peuvent assumer différents rôles dans le Réseau du Patrimoine Numérique en fonction de s'ils fournissent des données sur les artefacts, consomment des données sur les artefacts ou fournissent des services supplémentaires qui affectent d'une manière ou d'une autre le cycle de vie de l'artefact.
+La liste des rôles possibles est donnée ci-dessous.<table>
   <thead>
     <tr>
       <th></th>
-      <th>Term</th>
+      <th>Terme</th>
       <th></th>
       <th>DERA (NL) [Rollen](https://dera.netwerkdigitaalerfgoed.nl/index.php/Rollen)</th>
-      <th>OSLO (VL) [Cultureel Erfgoed Object](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-object)</th>
+      <th>OSLO (VL) [Cultural Heritage Object](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-object)</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>M</td>
-      <td><dfn export>Maintainer</dfn></td>
-      <td>Person that manages the collections and datasets.</td>
+      <td><dfn export>Gestionnaire</dfn></td>
+      <td>Personne qui gère les collections et les ensembles de données.</td>
       <td>Bronhouder</td>
       <td></td>
     </tr>
     <tr>
       <td>TM</td>
-      <td><dfn export>Term Source Maintainer</dfn></td>
-      <td>Person that manages and curates the Terms and Term Sources.</td>
+      <td><dfn export>Gestionnaire de Source de Termes</dfn></td>
+      <td>Personne qui gère et conserve les Termes et les Sources de Termes.</td>
       <td>Bronhouder terminologiebron</td>
       <td>/</td>
     </tr>
     <tr>
       <td>OM</td>
-      <td><dfn export>Cultural Heritage Object Maintainer</dfn></td>
-      <td>Person that manages the collections and datasets.</td>
+      <td><dfn export>Gestionnaire d'Objet de Patrimoine Culturel</dfn></td>
+      <td>Personne qui gère les collections et les ensembles de données.</td>
       <td>Bronhouder metadata cultuurhistorisch object</td>
       <td rowspan="2">/</td>
     </tr>
     <tr>
       <td>EM</td>
-      <td><dfn export>Enrichments Maintainer</dfn></td>
-      <td>Person that manages an enrichment service (provider).</td>
+      <td><dfn export>Gestionnaire d'Enrichissements</dfn></td>
+      <td>Personne qui gère un service d'enrichissement (fournisseur).</td>
       <td>Bronhouder metadata verrijkingen</td>
     </tr>
     <tr>
       <td>C</td>
-      <td><dfn export>Consumer</dfn></td>
-      <td>Entity that queries the network for cultural heritage information.</td>
+      <td><dfn export>Consommateur</dfn></td>
+      <td>Entité qui interroge le réseau pour obtenir des informations sur le patrimoine culturel.</td>
       <td>Afnemer</td>
       <td>/</td>
     </tr>
     <tr>
       <td>P</td>
-      <td><dfn export>Service Provider</dfn></td>
-      <td>Entity that provides a service in the network.</dfn></td>
+      <td><dfn export>Fournisseur de Service</dfn></td>
+      <td>Entité qui fournit un service sur le réseau.</dfn></td>
       <td>Dienstverlener</td>
       <td>/</td>
     </tr>
     <tr>
       <td>SP</td>
-      <td><dfn export>Service Portal Provider</dfn></td>
-      <td>Entity that provides a Service Portal to end users that selects and displays cultural heritage information from the network.</td>
+      <td><dfn export>Fournisseur de Portail de Service</dfn></td>
+      <td>Entité qui fournit un Portail de Service aux utilisateurs finaux qui sélectionne et affiche des informations sur le patrimoine culturel du réseau.</td>
       <td>Portaal Dienstverlener</td>
       <td>/</td>
     </tr>
     <tr>
       <td>R</td>
-      <td><dfn export>Dataset Registry</dfn></td>
-      <td>Catalog for metadata about [=Datasets=] with cultural heritage information. Can make topic-based selections of [=datasets=] and runs enrichments services to improve these selections.</td>
+      <td><dfn export>Registre des Ensembles de Données</dfn></td><td>Catalogue pour métadonnées sur [=Datasets=] avec des informations sur le patrimoine culturel. Peut faire des sélections basées sur les sujets de [=datasets=] et exécute des services d'enrichissement pour améliorer ces sélections.</td>
       <td>Makelaar</td>
       <td>/</td>
     </tr>
     <tr>
       <td>NT</td>
-      <td><dfn export>Network of Terms</dfn></td>
-      <td>Catalog for metadata on [=Term Sources=]. Can make selections of [=Term Sources=] based on topic.</td>
+      <td><dfn export>Réseau de Termes</dfn></td>
+      <td>Catalogue pour métadonnées sur les [=Term Sources=]. Peut faire des sélections de [=Term Sources=] basées sur le sujet.</td>
       <td>Makelaar</td>
       <td>/</td>
     </tr>
     <tr>
       <td>KG</td>
-      <td><dfn export>Knowledge Graph</dfn></td>
-      <td>Catalog for finding relations between terms and objects.</td>
+      <td><dfn export>Graphique de Connaissances</dfn></td>
+      <td>Catalogue pour trouver des relations entre les termes et les objets.</td>
       <td>Makelaar</td>
       <td>/</td>
     </tr>
     <tr>
       <td>B</td>
-      <td><dfn export>Collector (Browser)</dfn></td>
-      <td>Entity that crawls the network in a targeted fashion in order to collect data that matches a query. It it used to construct [=Knowledge Graphs=].</td>
+      <td><dfn export>Collecteur (Navigateur)</dfn></td>
+      <td>Entité qui parcourt le réseau de manière ciblée afin de collecter des données qui correspondent à une requête. Il est utilisé pour construire des [=Knowledge Graphs=].</td>
       <td>Makelaar</td>
       <td>/</td>
     </tr>
   </tbody>
-</table>
-
-Pilot Use Cases {#usecases}
+</table>Cas d'utilisation pilotes {#usecases}
 =======================================================
 
-This section documents a selection of use cases from three Dutch Digital Heritage Network members: [Van Gogh Worldwide](https://vangoghworldwide.org), [Brabants Erfgoed](https://www.brabantserfgoed.nl) and [Oorlogsbronnen](https://www.brabantserfgoed.nl).
-They help constructing a reference set of business processes that are common in a network of digital heritage stakeholders.
-The result is described in [[#businessprocesses]].
+Cette section documente une sélection de cas d'utilisation provenant de trois membres du Réseau du Patrimoine Numérique Néerlandais : [Van Gogh Worldwide](https://vangoghworldwide.org), [Brabants Erfgoed](https://www.brabantserfgoed.nl) et [Oorlogsbronnen](https://www.brabantserfgoed.nl).
+Ils aident à construire un ensemble de référence de processus métier communs dans un réseau de parties prenantes du patrimoine numérique.
+Le résultat est décrit dans [[#businessprocesses]].
 
-Because ErfgoedPod project attempts at making digital heritage more usable, the selected use cases deliberately take the perspective of the end-user applications or [=Service Portal=].
-Therefore, the [=Service Portal Providers=] were consulted with the following three questions:
+Puisque le projet ErfgoedPod tente de rendre le patrimoine numérique plus utilisable, les cas d'utilisation sélectionnés prennent délibérément le point de vue des applications finales ou du [=Service Portal=].
+Par conséquent, les [=Fournisseurs de Portail de Service=] ont été consultés avec les trois questions suivantes :
 
-1. How do they discover datasets?
-2. How do they decide which of these datasets are relevant for their portal?
-3. How can the Dutch Digital Heritage Network design, in particular the [=Dataset Registry=], [=Knowledge Graph=], and [=Network of Terms=] actor roles, help this process?
+1. Comment découvrent-ils les ensembles de données ?
+2. Comment décident-ils quels sont les ensembles de données pertinents pour leur portail ?
+3. Comment le design du Réseau du Patrimoine Numérique Néerlandais, en particulier les rôles d'acteur [=Dataset Registry=], [=Knowledge Graph=] et [=Network of Terms=], peut-il aider ce processus ?
 
 <table>
 <thead>
   <tr>
-    <th>Use Case
-    <th>Discovery method
-    <th>relevancy criteria
-    <th>How can NDE support?
+    <th>Cas d'utilisation
+    <th>Méthode de découverte
+    <th>Critères de pertinence
+    <th>Comment NDE peut-il aider ?
   <tbody>
   <tr>
-    <th> 
+    <th>
     Van Gogh Worldwide
     <td>
-    Manual effort by the [=Service Portal Provider =] based on a fixed list of [=cultural heritage institutions=]. 
+    Effort manuel par le fournisseur du portail de service basé sur une liste fixe d'institutions du patrimoine culturel.
     <td>
       <ul>
-      <li>Content: certified **artworks** of Vincent Van Gogh
-      <li>License: CC0
-      <li>Origin: known institutions registered with Van Gogh Worldwide
-      <li>Format: RDF using [Linked Art](https://linked.art/model/index.html)
+      <li>Contenu : œuvres d'art certifiées de Vincent Van Gogh
+      <li>Licence : CC0
+      <li>Origine : institutions connues enregistrées auprès de Van Gogh Worldwide
+      <li>Format : RDF utilisant la technologie [Linked Art](https://linked.art/model/index.html)
       </ul>
     <td>
-    Automating the discovery and delivery of metadata on relevant artworks.
-    This includes enabling portals to select data using their relevancy criteria.
+    Automatisation de la découverte et de la livraison des métadonnées sur les œuvres pertinentes. Cela comprend la possibilité pour les portails de sélectionner les données en utilisant leurs critères de pertinence.
   <tr>
-    <th> 
+    <th>
     Brabants Erfgoed
     <td>
-    Automatically via a regional aggregation platform Brabant Cloud, but without a discovery process.
+    Automatiquement via une plateforme d'agrégation régionale Brabant Cloud, mais sans processus de découverte.
     <td>
-    Criteria are defined by the Brabant Cloud platform:
+    Les critères sont définis par la plateforme Brabant Cloud :
       <ul>
-        <li>Content: cultural heritage objects or digital representations (eg., photos) of things located in the Brabant region.
-        <li>Origin: fixed list of known institutions. These are mostly located in the Noord-Brabant region and registered with Brabant Cloud, but they can also be situated outside.
-        <li>License: any license that allows dissemination through the platform.
-        <li>Data quality: datasets must reach a certain quality standard.
+        <li>Contenu : objets du patrimoine culturel ou représentations numériques (par exemple, photos) de choses situées dans la région de Brabant.
+        <li>Origine : liste fixe d'institutions connues. La plupart de ces institutions sont situées dans la région du Noord-Brabant et sont enregistrées auprès du Brabant Cloud, mais elles peuvent également être situées à l'extérieur.
+        <li>Licence : toute licence permettant la diffusion sur la plateforme.
+        <li>Qualité des données : les ensembles de données doivent atteindre un certain standard de qualité.
       </ul>
     <td>
-    Enabling the portal to find and select data using their relevancy criteria.
+    Permettre au portail de trouver et de sélectionner les données en utilisant leurs critères de pertinence.
   <tr>
-    <th> 
+    <th>
     Oorlogsbronnen
     <td>
     <ul>
-        <li>Active: approaching organisations who have data on blind spots in the collection.
-        <li>Reactive: they are approached with datasets by their organisations in their partner network who seek exposure. 
+        <li>Active : approche des organisations qui possèdent des données sur des zones aveugles de la collection.
+        <li>Réactive : ces organisations sont approchées avec des ensembles de données par leurs organisations partenaires qui recherchent une visibilité.
     <td>
       <ul>
-        <li>Content: broad range of object surrounding the WWII time period. Based on theme, time or thesaurus references.
-        <li>Origin: fixed list of known institutions. These are mostly located in the Noord-Brabant region and registered with Brabant Cloud, but they can also be situated outside.
-        <li>License: any license that allows dissemination through the platform.
-        <li>Data quality: datasets must reach a certain quality standard.
+        <li>Contenu : large éventail d'objets entourant la période de la Seconde Guerre mondiale. Basé sur le thème, le temps ou les références de thésaurus.<li>Origine : liste fixe d'institutions connues. Celles-ci sont principalement situées dans la région de Noord-Brabant et enregistrées auprès de Brabant Cloud, mais elles peuvent également être situées à l'extérieur.
+        <li>Licence : toute licence qui permet la diffusion via la plateforme.
+        <li>Qualité des données : les jeux de données doivent atteindre un certain standard de qualité.
       </ul>
     <td>
-    A more dynamic identification of sources that make (substantial) references to WWII (or similar) terms.<br><br>
-    In a later stage:
-    performing a full-text analysis of datasets to identify terms from the WWII thesaurus.
-    Stimulate the detailed description of datasets.
-    Alert the portals when discovering metadata in a certain timeperiod. 
+    Une identification plus dynamique des sources qui font des références (substantielles) aux termes de la Seconde Guerre mondiale (ou similaires).<br><br>
+    À une étape ultérieure :
+    effectuer une analyse de texte intégrale des jeux de données pour identifier les termes du thésaurus de la Seconde Guerre mondiale.
+    Stimuler la description détaillée des jeux de données.
+    Avertir les portails lors de la découverte de métadonnées dans une certaine période de temps. 
 </table>
 
-Business processes {#businessprocesses}
+Processus métiers {#businessprocesses}
 =======================================================
 
-This section described the different business processes that network [=actors=] in a specific [=role=] should be able to execute in a Decentralized Digital Heritage Network.
-To that end, they cover processes from the perspective of the following actor-role combinations:
+Cette section décrit les différents processus métiers que les acteurs du réseau [=actors=] dans un rôle spécifique [=role=] devraient être capables d'exécuter dans un réseau décentralisé du patrimoine numérique.
+À cet effet, ils couvrent les processus du point de vue des combinaisons d'acteurs et de rôles suivantes :
 
-1. the Cultural Heritage Institutions and Term Source Providers that act as [=maintainers=]. A single organization can be both actors, but this is not always the case;
-2. organizations that take up the [=Dataset Registry=] Function;
-3. organizations that act as a [=Network of Terms=].
-4. organizations that act as a [=Knowledge Graph=].
+1. les institutions du patrimoine culturel et les fournisseurs de termes source qui agissent en tant que [=maintainers=]. Une seule organisation peut être les deux acteurs, mais ce n'est pas toujours le cas ;
+2. les organisations qui assument la fonction [=Dataset Registry=] ;
+3. les organisations qui agissent en tant que [=Network of Terms=].
+4. les organisations qui agissent en tant que [=Knowledge Graph=].
 
-Each business process (BP1 - 10) is described as a high-level description, followed by a more detailed description of the implementation details. 
+Chaque processus d'entreprise (BP1 - 10) est décrit comme une description de haut niveau, suivie d'une description plus détaillée des détails de mise en œuvre. 
 
-## Perspective of the Cultural Heritage Institution
+## Perspective de l'institution culturelle du patrimoine
 
-This section takes an internal perspective on the [=Cultural Heritage Institution=].
-This includes business processes that only affect actors inside a single institution and are often of preparational or operational nature such as setting up a software component. 
+Cette section prend une perspective interne sur l'[=Cultural Heritage Institution=].
+Cela comprend les processus d'entreprise qui n'affectent que les acteurs à l'intérieur d'une seule institution et qui sont souvent de nature préparatoire ou opérationnelle, comme la mise en place d'un composant logiciel. 
 
-### (BP1) Initialize a Digital Heritage Pod from a Solid data pod
+### (BP1) Initialiser un pod de patrimoine numérique à partir d'un pod de données Solid
 
-A [=cultural heritage institution=] want to participate in the (decentralized) Dutch Digital Heritage Network. 
-Therefore, a Solid data pod is required to serve as main exchange hub for metadata about [=cultural heritage objects=]. 
+Une [=institution du patrimoine culturel=] souhaite participer au réseau (décentralisé) du patrimoine numérique néerlandais.
+Par conséquent, un pod de données Solid est nécessaire pour servir de centre d'échange principal pour les métadonnées sur les [=objets du patrimoine culturel=].1. Un [=maintainer=], qui est employé par l'institution, crée un pod de données en utilisant un service existant ou en hébergeant un serveur Solid localement.
+2. Ensuite, le [=maintainer=] prépare ce pod de données en créant deux ressources :
+    - une ressource [=inbox=] afin de recevoir des notifications d'autres acteurs du réseau
+    - une ressource de journal d'événements pour publier une liste d'événements qui ont impacté le cycle de vie des [=objets patrimoniaux culturels=] (par exemple, un objet a été créé, enregistré, archivé, supprimé, etc.).
+3. Le pod de données Solid est maintenant un [=Digital Heritage Pod=] conforme et l'[=institution patrimoniale culturelle=] peut participer au réseau.
 
-1.  A [=maintainer=], who is employed at the institution, creates a data pod using an existing service or by hosting a Solid server locally.
-2.  Next, the [=maintainer=] prepares this data pod by creating two resources: 
-    - an [=inbox=] resource in order to receive notification from other actors in the network
-    - an eventlog resource to publish a list of events that impacted the lifecycle of the [=cultural heritage objects=] (eg. an object was created, registered, archived, deleted, etc.).
-3. The Solid data pod is now a compliant [=Digital Heritage Pod=] and the [=cultural heritage institution=] can paritipate in the network.
+### (BP2) Permettre l'automatisation des processus métier en initialisant un service d'orchestration
 
-### (BP2) Enabling automation of business processes by initializing an orchestration service
+Une [=institution patrimoniale culturelle=] nécessite une interaction avec d'autres acteurs du réseau pour exécuter leurs processus métier.
+Plutôt que d'exécuter manuellement les étapes consécutives d'un tel processus, 
+un [=maintainer=] de l'institution peut configurer un composant [=Orchestrator=] pour automatiser ces tâches.  
 
-A [=cultural heritage institution=] requires interaction with other network actors to execute their business processes.
-Rather than manually executing the consecutive steps of such process, 
-an institution’s [=maintainer=] can setup an [=Orchestrator=] component to automate such tasks.  
+1. Un [=maintainer=], qui est employé par l'institution, crée une instance [=orchestrator=] en utilisant un service existant ou en l'exécutant localement comme un processus en arrière-plan.
+2. Le [=maintainer=] fournit à l'instance [=orchestrator=] l'emplacement de sa ressource [=inbox=], de sorte que l'[=orchestrator=] est capable de lire les notifications qui pourraient déclencher un processus métier.
+3. Ensuite, l'[=orchestrator=] nécessite une version lisible par machine de tous les processus métier que l'[=institution patrimoniale culturelle=] souhaite exécuter sur le réseau.
+4. Une fois que l'orchestrateur a reconnu une réception réussie de l'inbox et des processus métier, l'initialisation est terminée.
 
-1. A [=maintainer=], who is employed at the institution, creates an [=orchestrator=] instance using an existing service or by running it locally as a background process.
-2. The [=maintainer=] supplies the [=orchestrator=] instance with the location of its [=inbox=] resource, so the [=orchestrator=] is able to read notifications that might trigger a business process.
-3. Next, the [=orchestrator=] requires a machine-readable version of all the business processes that the [=cultural heritage institution=] wants to execute on the network.
-4. Once the orchestrator has acknowledged a successful reception of the inbox and the business processes, the initialization is complete.
+### (BP3) Notifier les institutions des enrichissementsDeux [=institutions du patrimoine culturel=] peuvent également améliorer l'interconnexion de leurs collections dans un processus de découverte réciproque.
+Cela facilite la création de liens, de backlinks ou de métadonnées augmentées entre [=objets du patrimoine culturel=].
 
+1. Une [=institution du patrimoine culturel=] (A) ajoute des informations (par ex. un lien) sur un [=objet du patrimoine culturel=] à un ensemble de données existant.
+2. L'[=institution du patrimoine culturel=] (A) informe une [=institution du patrimoine culturel=] cible (B) qu'elle a des informations sur d'éventuels [=objets du patrimoine culturel=] dans leur collection.
+4. L'[=institution du patrimoine culturel=] (B) ajoute ensuite ces informations ou des backlinks aux [=objets du patrimoine culturel=] de l'[=institution du patrimoine culturel=] (A).
 
-### (BP3) Notifiying institutions about enrichments
+## Perspective de l'institution du patrimoine culturel interagissant avec le registre des ensembles de données ##
 
-Two [=cultural heritage institutions=] can also improve the interconnectedness of their collections in a reciprocal discovery process.
-Thereby, it facilitates the creation of links, backlinks or augmented metadata between [=cultural heritage objects=]. 
+Cette section adopte la perspective d'une [=Institution du Patrimoine Culturel=] interagissant avec un Service de [=Registre des Ensembles de Données=], qui met en œuvre la conception de la [Fonction de registre des ensembles de données](https://docs.google.com/document/d/1-E4DIwlzbL8Esv5YtHbVUXkT_U3pCprFDSI-hjiKf90/edit?ts=5fbd2dcd#) en utilisant l'architecture Solid et ResearcherPod.
+Cela implique des processus métiers partagés entre les deux parties où l'institution demande un service (c'est-à-dire ajouter, mettre à jour ou supprimer des résumés d'ensembles de données du registre des ensembles de données) et le [=Registre des Ensembles de Données=] répond à cette demande.
+Ce dernier comprend l'issue possible du service réalisé.
 
-1. A [=cultural heritage institution=] (A) adds information (eg. a link) about a [=cultural heritage object=] to an existing dataset.
-2. The A [=cultural heritage institution=] (A) notifies a target [=cultural heritage institution=] (B) that it has intomation about possible [=cultural heritage objects=] in their collection.
-4. [=Cultural heritage institution=] (B) then adds this information or backlinks to the [=cultural heritage objects=] of [=cultural heritage institution=] (A).
+### (BP3) Une institution du patrimoine culturel s'enregistre auprès d'un registre de données ### {#BP3}
 
+Un service de [=registre de données=] recueille les descriptions d'ensembles de données ([=ensemble de données de métadonnées=]) provenant des [=institutions du patrimoine culturel=].
+Sur la base de ces informations, le service de registre de données peut orienter un [=consommateur=] vers les [=pods du patrimoine numérique=] qui stockent les ensembles de données pertinents.
+Cependant, pour y parvenir, une [=institution du patrimoine culturel=] doit être connue et de confiance par le service de [=registre de données=].1. Une [=institution du patrimoine culturel=] conserve un [=profil d'organisation=] lisible par machine qui contient une description de base de l'institution.
+2. Un [=conservateur=], qui est employé par l'institution, soumet une demande d'inscription au service [=registre de jeux de données=] contenant un lien vers le profil.
+3. Lors du traitement de la demande, le registre de jeux de données télécharge le [=profil d'organisation=] et vérifie son éligibilité au service.
+4. Si l'inscription de l'[=institution du patrimoine culturel=] est acceptée, le service [=registre de jeux de données=] ajoute l'institution à la liste des [=conservateurs=] de jeux de données enregistrés et informe l'institution d'une inscription réussie.
 
-## Perspective from the Cultural Heritage Institution interacting with the Dataset Registry
+### (BP4) Une institution du patrimoine culturel enregistre un nouveau jeu de données auprès du Registre des jeux de données ### {#BP4}
 
-This section takes the perspective of an [=Cultural Heritage Institution=] interacting with a [=Dataset Registry=] Service, which implements the design of the [Dataset Registry-function](https://docs.google.com/document/d/1-E4DIwlzbL8Esv5YtHbVUXkT_U3pCprFDSI-hjiKf90/edit?ts=5fbd2dcd#) using the Solid and ResearcherPod architecture.
-This entails business processes that are shared between both parties where the institution is requesting a service (ie. adding, updating or removing dataset summaries from the dataset registry) and the [=Dataset Registry=] responding to that request.
-The latter includes the possible outcome of the performed service.
+Une fois qu'une [=institution du patrimoine culturel=] est enregistrée auprès d'un service [=registre de jeux de données=], 
+elle peut ajouter des descriptions de jeux de données ou [=jeux de métadonnées=] à ce service.
 
-### (BP3) A Cultural Heritage Institution registers itself to a Dataset Registry ### {#BP3}
+1. Un [=conservateur=], qui est employé par l'institution, informe le service [=registre de jeux de données=] qu'une nouvelle distribution de jeu de données est disponible. Le [=conservateur=] fournit un lien vers le [=jeu de métadonnées=]. 
+2. Le service [=registre de jeux de données=] vérifie si l'[=institution du patrimoine culturel=] est enregistrée. Si c'est le cas, il télécharge le [=jeu de métadonnées=] l’ajoute à son index pour permettre la recherche.
+3. Lorsque l'indexation est terminée, le service [=registre de jeux de données=] informe l'[=institution du patrimoine culturel=] que le jeu de données fait partie du service [=registre de jeux de données=].
 
-A [=dataset registry=] service collects descriptions of datasets ([=metadata dataset=]) from [=cultural heritage institutions=].
-Based on this information, the dataset registry service can navigate a [=consumer=] to the [=digital heritage pods=] that store relevant datasets.
-However, in order to achieve this, an [=cultural heritage institution=] needs to be known and trusted by the [=dataset registry=] service.
+### (BP6) Une institution du patrimoine culturel met à jour un jeu de données enregistré dans le Registre des jeux de données ### {#BP5}
 
-1. A [=Cultural Heritage Institution=] maintains a machine-readable [=organisation profile=] that contains a basic description of the institution.
-2. A [=maintainer=], who is employed at the institution, submits a registration request to the [=dataset registry=] service containing a link to the profile. 
-3. When processing the request, the dataset registry downloads the [=organisation profile=] and verifies its eligibility to the service.
-4. If the registration of the [=cultural heritage institution=] is accepted, the [=dataset registry=] service adds the institution to the list of registered dataset [=maintainers=] and informs the institution of a successful registration.
-
-### (BP4) A Cultural Heritage Institution registers a new Dataset with the Dataset Registry ### {#BP4}
-
-Once a [=cultural heritage institution=] is registered with a [=dataset registry=] service, 
-it can add dataset descriptions or [=metadata dataset=] to this service.
-
-1. A [=maintainer=], who is employed at the institution, notifies the [=dataset registry=] service that a new dataset distribution is available. The [=maintainer=] supplies a link to the [=metadata dataset=]. 
-2. The [=dataset registry=] service checks whether the [=cultural heritage institution=] is registered. If so, it downloads the [=metadata dataset=] adds it to its index to enable search.
-3. When the indexing is done, the [=dataset registry=] service informs the [=cultural heritage institution=] that the dataset is part of the [=dataset registry=] service.
-
-### (BP6) A Cultural Heritage Institution updates a registered Dataset in the Dataset Registry ### {#BP5}
-
-A [=cultural heritage institution=] can release a new version of an former dataset that is already registered with a [=dataset registry=] service.
-In that case, it needs to reflect the update in the [=dataset registry=] service.
-
-1. A [=maintainer=], who is employed at the institution, notifies the [=dataset registry=] service that a new dataset distribution of a registered dataset is available. The [=maintainer=] supplies a link to the updated [=metadata dataset=]. 
-2. The [=dataset registry=] service checks whether the [=cultural heritage institution=] is registered. If so, it downloads the [=metadata dataset=] and replaces the old version in the search index.
-3. When the indexing is done, the [=dataset registry=] service informs the [=cultural heritage institution=] that the dataset has been updated in the [=dataset registry=] service.
+Une [=institution du patrimoine culturel=] peut publier une nouvelle version d'un ancien jeu de données qui est déjà enregistré auprès d'un service [=registre de jeux de données=].
+Dans ce cas, il doit indiquer la mise à jour dans le service [=registre de jeux de données=].1. Un [=mainteneur=], qui est employé dans l'institution, informe le service [=dataset registry=] qu'une nouvelle distribution de données d'un ensemble de données enregistré est disponible. Le [=mainteneur=] fournit un lien vers l'ensemble de données [=metadata dataset=] mis à jour.
+2. Le service [=dataset registry=] vérifie si l'[=institution du patrimoine culturel=] est enregistrée. Si c'est le cas, il télécharge l'ensemble de données [=metadata dataset=] et remplace l'ancienne version dans l'index de recherche.
+3. Lorsque l'indexation est terminée, le service [=dataset registry=] informe l'[=institution du patrimoine culturel=] que l'ensemble de données a été mis à jour dans le service [=dataset registry=].
 
 ## Perspective Knowledge Graph / Network Of Terms - Dataset Registry
 
-This section takes the perspective of the interaction between the [=Dataset Registry=] Service and the applications [=Knowledge Graph=] and [=Network of Terms=].
-This entails business processes where both services notify eachother about important events. 
-Hence, these processes are often initiated by the completion of another business process (eg. one between the institution and the dataset registry). 
+Cette section prend la perspective de l'interaction entre le Service de [=Dataset Registry=] et les applications [=Knowledge Graph=] et [=Network of Terms=].
+Cela implique des processus d'affaires où les deux services se notifient mutuellement d'événements importants.
+Par conséquent, ces processus sont souvent initiés par l'achèvement d'un autre processus d'affaires (par exemple, un entre l'institution et le registre des ensembles de données).
 
-### (BP7) A Knowledge Graph or Network of Terms subscribes to a topic
+### (BP7) Un Knowledge Graph ou Network of Terms s'abonne à un sujet
 
-The [=Knowledge Graph=] and [=Network of Terms=] construct topic-oriented sets of metadata by collecting relevant metadata from the network.
-In case of the [=Knowledge Graph=], these sets are about [=cultural heritage objects=], and in case of the [=Network of Terms=], these sets are about [=term sources=].
+Le [=Knowledge Graph=] et le [=Network of Terms=] construisent des ensembles de métadonnées orientés vers un sujet particulier en collectant les métadonnées pertinentes du réseau.
+Dans le cas du [=Knowledge Graph=], ces ensembles concernent les [=objets du patrimoine culturel=], et dans le cas du [=Network of Terms=], ces ensembles concernent les [=sources de termes=].
 
-Both applications need to discover [=datasets=] from [=cultural heritage institutions=] that have data relevant to their topic.
-Therefore, they rely on the [=dataset registry=] service to help them narrow the search space based on the [=metadata dataset=] and point them to the dataset locations. 
+Les deux applications ont besoin de découvrir des ensembles de données provenant des [=institutions du patrimoine culturel=] qui ont des données pertinentes pour leur sujet.
+Par conséquent, ils s'appuient sur le service [=dataset registry=] pour les aider à réduire l'espace de recherche en fonction de l'ensemble de données de métadonnées et à les orienter vers les emplacements des ensembles de données.1. Un [=Graphique de Connaissances=] ou un [=Réseau de Termes=] envoie une demande d'abonnement à un certain sujet au service [=registre de jeux de données=].
+2. Le service [=registre de jeux de données=] ajoute l'expéditeur à l'entrée de l'index de ce sujet et l'informe de l'abonnement.
 
-1. A [=Knowledge Graph=] or [=Network of Terms=] sends a subscription request on a certain topic to the [=dataset registry=] service.
-2. The [=dataset registry=] service adds the sender to the index entry of that topic and informs them of the subscription.
+### (BP8) Un Graphique de Connaissances découvre un jeu de données relatif à un sujet auquel il est abonné
 
-### (BP8) A Knowledge Graph discovers a dataset related to a subscribed topic
+1. Lorsque le service [=registre de jeux de données=] reçoit une description de jeu de données nouvelle ou mise à jour ([=Jeu de Données Metadata=]) via [[#BP4]] ou [[#BP5]], il identifie les sujets liés au [=jeu de données=].
+2. Le service [=registre de jeux de données=] vérifie chaque sujet dans l'index d'abonnement.
+3. Si des applications [=Graphique de Connaissances=] sont abonnées à l'un des sujets, elles sont informées qu'un jeu de données est pertinent pour leur recherche. Un lien vers le jeu de données est inclus dans la notification.
+4. En recevant cette notification, le [=Graphique de Connaissances=] extrait le lien et télécharge le [=Jeu de Données=] du [=Pod du Patrimoine Numérique=] de l'[=Institution du Patrimoine Culturel=].
+5. Le [=Graphique de Connaissances=] traite le jeu de données et l'incorpore dans l'ensemble des méta-données orientées sujet.
 
-1. When the [=dataset registry=] service receives a new or updated dataset description ([=Metadata Dataset=]) via [[#BP4]] or [[#BP5]], it identifies the topics that are related to the [=dataset=]. 
-2. The [=dataset registry=] service cross-checks each topic to the subscription index. 
-3. If [=Knowledge Graph=] applications are subscribed to any of the topics, they are notified that a dataset is relevant to their search. A link to the dataset is included in the notification.
-4. When receiving this notification, the [=Knowledge Graph=] extracts the link and downloads the [=Dataset=] from the [=Cultural Heritage Institution=]'s [=Digital Heritage Pod=].
-5. The [=Knowledge Graph=] processes the dataset and incorporates it in the topic-oriented set of metadata.
+### (BP9) Découvrir une source de terme
 
-### (BP9) Discovering a Term source
-
-1. When the [=dataset registry=] service receives a new or updated term source description ([=Metadata Term Source=]) via [[#BP4]] or [[#BP5]],
-          it identifies the topics that are related to the [=term source=]. 
-2. The [=dataset registry=] service cross-checks each topic to the subscription index. 
-3. If [=Network of Terms=] applications are subscribed to any of the topics, they are notified that a [=term source=] is relevant to their search. A link to the [=term source=] is included in the notification.
-4. When receiving this notification, the [=Network of Terms=] extracts the link and downloads the [=term source=] from the [=Cultural Heritage Institution=]'s [=Digital Heritage Pod=].
-5. The [=Network of Terms=] processes the [=term source=] and incorporates it in its search index.    
-  
+1. Lorsque le service [=registre de jeux de données=] reçoit une description de source de terme nouvelle ou mise à jour ([=Source de Termes Metadata=]) via [[#BP4]] ou [[#BP5]],
+          il identifie les sujets qui sont liés à la [=source de terme=].
+2. Le service [=registre de jeux de données=] vérifie chaque sujet dans l'index d'abonnement.
+3. Si des applications [=Réseau de Termes=] sont abonnées à l'un des sujets, elles sont informées qu'une [=source de terme=] est pertinente pour leur recherche. Un lien vers la [=source de terme=] est inclus dans la notification.
+4. En recevant cette notification, le [=Réseau de Termes=] extrait le lien et télécharge la [=source de terme=] du [=Pod du Patrimoine Numérique=] de l'[=Institution du Patrimoine Culturel=].
+5. Le [=Réseau de Termes=] traite la [=source de terme=] et l'incorpore dans son index de recherche.
 
 <pre class=biblio>
 {
@@ -622,8 +564,8 @@ Therefore, they rely on the [=dataset registry=] service to help them narrow the
 		],
 		"href": "https://solid.github.io/authentication-panel/solid-oidc/",
 		"title": "SOLID-OIDC",
-		"status": "Editor’s Draft",
-		"publisher": "Solid project",
+		"status": "Brouillon de l'éditeur",
+		"publisher": "Projet Solid",
 		"deliveredBy": [
 			"https://www.w3.org/community/solid/"
 		]
@@ -638,9 +580,9 @@ Therefore, they rely on the [=dataset registry=] service to help them narrow the
 			"Dmitri Zagidulin"
 		],
 		"href": "https://solidproject.org/TR/protocol/",
-		"title": "The Solid Protocol",
-		"status": "Editor’s Draft",
-		"publisher": "Solid project",
+		"title": "Le protocole Solid",
+		"status": "Brouillon de l'éditeur",
+		"publisher": "Projet Solid",
 		"deliveredBy": [
 			"https://www.w3.org/community/solid/"
 		]
@@ -651,8 +593,8 @@ Therefore, they rely on the [=dataset registry=] service to help them narrow the
 			"Bob Coret"
 		],
 		"href": "https://netwerk-digitaal-erfgoed.github.io/requirements-datasets",
-		"title": "Requirements for Datasets",
-		"status": "Living Standard",
+		"title": "Exigences pour les ensembles de données",
+		"status": "Standard Vivant",
 		"publisher": "Netwerk Digitaal Erfgoed",
 		"deliveredBy": [
 			"https://netwerkdigitaalerfgoed.nl"
@@ -663,8 +605,8 @@ Therefore, they rely on the [=dataset registry=] service to help them narrow the
 			"Miel Vander Sande"
 		],
 		"href": "https://erfgoedpod.github.io/architecture",
-		"title": "Architecture Decentralized Digital Heritage Network",
-		"status": "Living Standard",
+		"title": "Architecture du Réseau Décentralisé du Patrimoine Numérique",
+		"status": "Standard Vivant",
 		"publisher": "Netwerk Digitaal Erfgoed & meemoo",
 		"deliveredBy": [
 			"https://netwerkdigitaalerfgoed.nl"

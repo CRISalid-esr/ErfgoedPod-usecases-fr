@@ -1,0 +1,674 @@
+<pre class='metadata'>
+Title: Use Cases & Business Processes
+Shortname: erfgoedpod-usecases
+Level: 1
+Status: LD
+URL: https://erfgoedpod.github.io/usecases
+Editor: Miel Vander Sande, [meemoo](https://meemoo.be), miel.vandersande@meemoo.be
+Abstract: This specification describes the different use cases for exchanging digital heritage data in the Netherlands and Flanders using principles from Solid and the Researcher Pod project.
+Markup Shorthands: markdown yes
+</pre>
+
+<style>
+table {
+  margin: 25px auto;
+  border-collapse: collapse;
+  border: 1px solid #eee;
+  border-bottom: 2px solid #005A9C;
+}
+table tr:hover {
+  background: #f4f4f4;
+}
+table tr:hover td {
+  color: #555;
+}
+table th, table td {
+  color: #000;
+  border: 1px solid #eee;
+  padding: 12px 12px;
+  border-collapse: collapse;
+}
+table th {
+  background: #005A9C;
+  color: #fff;
+}
+table th.last {
+  border-right: none;
+}
+table th a[href] {
+  color: #fff;
+}
+</style>
+
+# Set of documents
+
+This document is one of the *Decentralized Digital Heritage Network* specifications produced by the ErfgoedPod project by the [Dutch Digital Heritage Network (NDE)](https://netwerkdigitaalerfgoed.nl/en/), [meemoo - Flemish Institute for Archives](https://meemoo.be) and [Ghent University - IDLab](http://idlab.ugent.be):
+
+1. [Decentralized Digital Heritage Network architecture](/architecture/) 
+2. [Use cases & Business processes](/usecases/) (this document)
+3. [Common infrastructure in Cultural Heritage Institutions](/common-setups/)
+
+This project also contributes to the following companion specifications of the [ResearcherPod](https://mellonscholarlycommunication.github.io/spec-overview) project:
+
+1. [Orchestrator](https://mellonscholarlycommunication.github.io/spec-orchestrator/) 
+2. [Data Pod](https://mellonscholarlycommunication.github.io/spec-datapod/)
+3. [Rule language](https://mellonscholarlycommunication.github.io/spec-rulelanguage/)
+4. [Artefact Lifecycle Event Log](https://mellonscholarlycommunication.github.io/spec-eventlog/)
+5. [Notifications](https://mellonscholarlycommunication.github.io/spec-notifications/)
+6. [Collector](https://mellonscholarlycommunication.github.io/spec-collector/)
+
+Introduction
+=======================================================
+
+The [NDE-Usable](https://netwerkdigitaalerfgoed.nl/bruikbaar/) programme of the [Dutch Digital Heritage Network (NDE)](https://netwerkdigitaalerfgoed.nl/en/) 
+aim to redesign the way cultural heritage institutions and applications (eg. service portals that allow users to search for specific heritage data) exchange data.
+The current landscape shows a cascade of tightly coupled data aggregators,
+which has shown to be inflexible and lead to brittle integrations. 
+As a result, both the data providing institutions and the aggregators have high maintenance costs, 
+which are funds better spend elsewhere. 
+Moreover, 
+it leads to data duplication, with a subsequent loss of control for the cultural heritage institutions.
+
+NDE-Usable envisions a discovery infrastructure that guides applications to the relevant original data sources, 
+rather than aggregate and republish their data.
+The design integrates applications with institutions's collection data in a more loosely-coupled manner, 
+enabling institutions to reorientate their developed service integrations more easily to other vendors. 
+To this end, 
+NDE-Usable provides implementation guidelines, interoperability requirements and essential discovery services, 
+ie. a register for dataset descriptions and a search index for shared terminology sources (Network of Terms).
+
+The principles of Decentralized Web and Solid resonate strongly with NDE-Usable's network design.
+Therefore, the ErfgoedPod project explores what a possible implementation of the NDE-Usable vision could look like when applying the Solid ecosystem.
+The project outputs a possible design of a decentralized exchange network for digital heritage data.
+ErfgoedPod shares the goals of the current NDE-Usable infrastructure, but is considered a research effort, 
+and is therefore developed independently with a lower technology readiness level.
+In essence, 
+the project tests whether the principles of a decentralized social network - actors announcing, sharing & following information - are a sustainable basis for exchanging digital heritage data.
+
+The main project outcomes are protocols and components for creating generic decentralized exchange networks for various types of metadata pertaining artefacts, 
+which is joint work with the [ResearcherPod](https://mellonscholarlycommunication.github.io/spec-overview) project.
+Additionally, 
+ErfgoedPod provides a small background study, 
+an architectural design and a descriptions of relevant use cases to apply these generic protocols and components in the digital heritage domain.
+This document captures the use cases that originate from the NDE-Usable programme and the high-level design of a decentralized network for digital heritage artefacts.
+To that end, 
+it identifies a list of representative roles and services in the Dutch Digital Heritage Network and the business processes that they should be able to execute.
+These business processes then serve as a basis for a proof-of-concept implementation of such network, as further outlined in the [[architecture-nde|architecture specification]].  
+
+# Context Dutch Digital Heritage Network
+
+The NDE-Usable programme attempts to design a intermediary network infrastructure that facilitates 
+
+- End-user Web portals to discover and consume data about cultural heritage objects; and
+- [=Cultural heritage institutions=] to advertise and provide data about cultural heritage collections and objects.
+
+NDE-Usable deliberately avoids the unsustainable practice of aggregating data by 
+designing a network of intermediary services that help Web portals navigate to relevant datasets that institutions host and publish themselves.
+By basing such design on Solid,
+the ErfgoedPod project organizes communication between the institutions, 
+the Web portals and the mediating services using standardized protocols and in a very loose-coupled fashion.
+This highly increases data mobility: an integration with a service instance can be replaced with another at lower cost. 
+
+## Design of a Decentralized Digital Heritage Network
+
+ErfgoedPod provides generic designs of a network architecture and software components,
+described in the [[architecture-nde#components|architecture specification]].
+This design can be used to enable different types of actors to interact *about* an artefact.
+Actors types include the Web portals, the Cultural heritage institutions, but also value-adding services that populate the intermediary network space, such as repositories for long-term preservation or data registries.
+They can take up one or more of the following roles:
+
+- [[architecture-nde#pod|Digital Heritage Pod]]: storing and providing data in the network, typically the Cultural heritage institutions;
+- [[architecture-nde#hubs|Digital Heritage Service Hub]]: consuming data from Data Pods to perform a service on top of that data, typically the value-adding service providers;
+- [[architecture-nde#collector|Collector]]: discovering and collecting data from the network for further processing or to present it to end-users, typically the Web portals, but in some cases the service providers.
+
+Each role can have multiple instances, 
+possibly partitioned based on region or domain, creating a selection of Service Hubs to interact with.
+Unlike the metadata providers, 
+it is up to the instance how the service is implemented.
+However, if a service hub would provide data to other actors, 
+it has to adopt a Pod.
+Hence, is not uncommon for an actor to combine several roles, 
+especially when the service includes re-sharing data in some other shape or form. 
+For instance, a summarization service provider (Digital Heritage Service Hub) can discover and collect data (Collector) 
+and store the summaries for redistribution (Digital Heritage Pod). 
+
+On the network, the different actors interact with each other by sending notifications,
+which can be grouped according to the roles that are involved. 
+
+1. **Pod - Pod**: one institution stores an artefact (ie. digital heritage object or collection) and draws the attention of another institution to that artefact. Examples are two institutions sharing metadata because of a loan, or they do mutual enriching their collections with the metadata of the other party.
+2. **Data Pod - Service Hub**: one institution requests a service from a service provider. Examples include institutions wanting to register their dataset in a dataset registry or institutions starting an ingest process in a digital archive.
+3. **Service Hub - Service Hub**: one service provider involves another service provider in order to complete a service. Examples include a dataset summarization service depending on a dataset registry service.
+4. **Collector - Pod**: an end-user portal collects collection data from different institutions. Examples include a thematic website about a certain topic that collects cross-institutional data about that topic.
+5. **Collector - Pod**: an end-user portal depends on a service provider to collect data. Examples include the discovery of institutional data pods or for enrichments on that data.
+
+An illustration of the results is given in the diagram below.
+
+<figure>
+	<img src="images/NDE-overzicht.svg" width="100%" />
+	<figcaption>
+  The ErfgoedPod project presents an architecture that enable interactions between digital heritage institutions, service providers and end-user portals.
+  </figcaption>
+</figure>
+
+The Pods and Service Hubs contain the same minimal set of components: 
+- an [=Inbox=] resource to receive [[ldn|Linked Data Notifications]] ([[architecture-nde#pod]]);
+- a `Dashboard` and an `Orchestrator` with `Rulebook` to participate in the network ([[architecture-nde#participate]])
+- a `Query index` and a [[architecture-nde#artefact-lifecycle-event-log|Artefact Lifecycle Event Log]] to allow their infomation to be collected by others ([[architecture-nde#collection-information-from-a-decentralized-digital-heritage-network]])
+
+The complete setup can be summarized in a component blueprint, which can be used to implement any component in the Decentralized Digital Heritage Network.
+An overview is illustrated in the figure below.
+
+<pre class=include>
+path: images/nde-basic-setup.svg
+</pre>
+
+The remainder of this section provides more detail on how the current cultural heritage landscape would populate such high-level design.
+In the tables below, we aim to establish a shared understanding the different [[#actors]] (who is participating?), [[#roles]] (what is their function?), and [[#artefacts]] (what are they exchanging?) throughout this project and related initiatives.
+The terminology originates from the [high level design](https://github.com/netwerk-digitaal-erfgoed/high-level-design/blob/master/glossary.md) and the [datasets requirements](https://netwerk-digitaal-erfgoed.github.io/requirements-datasets) 
+and is aligned with the dutch architecture standard \[DERA](https://netwerkdigitaalerfgoed.nl/activiteiten/dera/) and the flemish vocabulary standard \[OSLO](https://data.vlaanderen.be/ns#Vocabularia), .
+
+## Actors in the network ## {#actors}
+
+The Digital Heritage Network (NDE) brings together a large number of active parties in one interoperable network.
+In [[architecture-nde|Decentralized Digital Heritage Network architecture]], these parties are defined as [[architecture-nde#actor|Actors]].
+An [[architecture-nde#actor|actor]] represents a human or organizational stakeholder that needs to interact with the digital heritage data in the network.
+The list of possible actor types is given below. 
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Term</th>
+      <th>Description</th>
+      <th>DERA (NL) [Actoren](https://dera.netwerkdigitaalerfgoed.nl/index.php/Actoren)</th>
+      <th>OSLO (VL) [Cultureel Erfgoed Event](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-event)</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CHI</td>
+      <td><dfn export>Cultural Heritage Institution</dfn></td>
+      <td>Organisation that manages digital heritage information and wants to share this information over the network. </td>
+      <td>Erfgoedinstelling</td>
+      <td>Organisatie</td>
+    </tr>
+    <tr>
+      <td>O</td>
+      <td><dfn export>Provider</dfn></td>
+      <td>Actor that selects, enriches or transforms cultural heritage information to provide certain services.</td>
+      <td>Leverancier</td>
+      <td rowspan="2">Agent</td>
+    </tr>
+    <tr>
+      <td>U</td>
+      <td><dfn export>User</dfn></td>
+      <td>Anyone who wants to use cultural heritage information.</td>
+      <td>Gebruiker</td>
+    </tr>
+  </tbody>
+</table>
+
+## Artefacts in the network ## {#artefacts}
+
+On the Digital Heritage Network, actors can exchange information pertaining to certain data objects related to digital heritage. 
+These data objects are denoted by the [[architecture-nde|Decentralized Digital Heritage Network architecture]] as artefacts.
+An [[architecture-nde#artefact|artefact]] as the object of an interaction between actors. Hence, within the scope of this project, actors exchange messages about an artefact, not the artefact itself.
+
+The list of relevant digital heritage artefacts is given below.
+We distinguish between digital heritage artefacts: artefacts with direct cultural heritage value and "metadata" artefacts: artefacts that are about other artefacts.
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Term</th>
+      <th>Description</th>
+      <th>DERA (NL) [Bedrijfsobjecten](https://dera.netwerkdigitaalerfgoed.nl/index.php/Bedrijfsobjecten)</th>
+      <th>OSLO (VL) [Cultureel Erfgoed Object](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-object)</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="5">Digital heritage artefacts</th>
+    </tr>
+    <tr>
+      <td>O</td>
+      <td><dfn export>Object</dfn></td>
+      <td>Generic representation of an entity.</td>
+      <td>Business Object</td>
+      <td>Entiteit</td>
+    </tr>
+    <tr>
+      <td>CO</td>
+      <td><dfn export>Cultural Heritage Object</dfn></td>
+      <td>Object with cultural heritage value.</td>
+      <td>Cultuurhistorisch object</td>
+      <td rowspan="2">Informatie Object</td>
+    </tr>
+    <tr>
+      <td>IO</td>
+      <td><dfn export>Information Object</dfn></td>
+      <td>Self-contained information related to a Cultural Heritage Object.</td>
+      <td>Informatieobject</td>
+    </tr>
+    <tr>
+      <td>E</td>
+      <td><dfn export>Enrichment</dfn></td>
+      <td>Information that is not explicitly present in the original Cultural Heritage Object.</td>
+      <td>Verrijking</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>D</td>
+      <td><dfn export>Dataset</dfn></td>
+      <td>Collection of Cultural Heritage Objects.</td>
+      <td>Dataset</td>
+      <td>Collectie</td>
+    </tr>
+    <tr>
+      <td>T</td>
+      <td><dfn export>Term</dfn></td>
+      <td>Word or phrase to denote a concept.</td>
+      <td>Term</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>TS</td>
+      <td><dfn export>Term Source</dfn></td>
+      <td>Source of controlled sets of terms.</td>
+      <td>Terminologiebron</td>
+      <td>/</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <th colspan="5">Metadata artefacts</th>
+    </tr>
+    <tr>
+      <td>MI</td>
+      <td><dfn export>Organisation Profile</dfn></td>
+      <td>A machine actionable profile of the organization with basic details (eg. identifier, name).</td>
+      <td>(Organisatie profiel)</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>MC</td>
+      <td><dfn export>Metadata<br>Cultural Heritage Object</dfn></td>
+      <td>Descriptive document about a Cultural Heritage Object.</td>
+      <td>Metadata Cultuurhistorisch object</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>ME</td>
+      <td><dfn export>Metadata<br>Enrichment</dfn></td>
+      <td>Descriptive document about an enrichment.</td>
+      <td>Metadata Verrijkingen</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>MD</td>
+      <td><dfn export>Metadata<br>Dataset</dfn></td>
+      <td>Descriptive document about a Dataset.</td>
+      <td>Metadata Dataset</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>MT</td>
+      <td><dfn export>Metadata Term Source</dfn></td>
+      <td>Descriptive document about a Term Source.</td>
+      <td>Metadata Terminologiebron</td>
+      <td>/</td>
+    </tr>
+  </tbody>
+</table>
+
+## Roles in the network ## {#roles}
+
+Actors can take up different roles in the Digital Heritage Network depending om whether they provide data about artefacts, consume data about artefacts or provide additional services that in some way affect the artefact's lifecycle.
+The list of possible roles is given below.
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Term</th>
+      <th></th>
+      <th>DERA (NL) [Rollen](https://dera.netwerkdigitaalerfgoed.nl/index.php/Rollen)</th>
+      <th>OSLO (VL) [Cultureel Erfgoed Object](https://data.vlaanderen.be/doc/applicatieprofiel/cultureel-erfgoed-object)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>M</td>
+      <td><dfn export>Maintainer</dfn></td>
+      <td>Person that manages the collections and datasets.</td>
+      <td>Bronhouder</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>TM</td>
+      <td><dfn export>Term Source Maintainer</dfn></td>
+      <td>Person that manages and curates the Terms and Term Sources.</td>
+      <td>Bronhouder terminologiebron</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>OM</td>
+      <td><dfn export>Cultural Heritage Object Maintainer</dfn></td>
+      <td>Person that manages the collections and datasets.</td>
+      <td>Bronhouder metadata cultuurhistorisch object</td>
+      <td rowspan="2">/</td>
+    </tr>
+    <tr>
+      <td>EM</td>
+      <td><dfn export>Enrichments Maintainer</dfn></td>
+      <td>Person that manages an enrichment service (provider).</td>
+      <td>Bronhouder metadata verrijkingen</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td><dfn export>Consumer</dfn></td>
+      <td>Entity that queries the network for cultural heritage information.</td>
+      <td>Afnemer</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>P</td>
+      <td><dfn export>Service Provider</dfn></td>
+      <td>Entity that provides a service in the network.</dfn></td>
+      <td>Dienstverlener</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>SP</td>
+      <td><dfn export>Service Portal Provider</dfn></td>
+      <td>Entity that provides a Service Portal to end users that selects and displays cultural heritage information from the network.</td>
+      <td>Portaal Dienstverlener</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>R</td>
+      <td><dfn export>Dataset Registry</dfn></td>
+      <td>Catalog for metadata about [=Datasets=] with cultural heritage information. Can make topic-based selections of [=datasets=] and runs enrichments services to improve these selections.</td>
+      <td>Makelaar</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>NT</td>
+      <td><dfn export>Network of Terms</dfn></td>
+      <td>Catalog for metadata on [=Term Sources=]. Can make selections of [=Term Sources=] based on topic.</td>
+      <td>Makelaar</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>KG</td>
+      <td><dfn export>Knowledge Graph</dfn></td>
+      <td>Catalog for finding relations between terms and objects.</td>
+      <td>Makelaar</td>
+      <td>/</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td><dfn export>Collector (Browser)</dfn></td>
+      <td>Entity that crawls the network in a targeted fashion in order to collect data that matches a query. It it used to construct [=Knowledge Graphs=].</td>
+      <td>Makelaar</td>
+      <td>/</td>
+    </tr>
+  </tbody>
+</table>
+
+Pilot Use Cases {#usecases}
+=======================================================
+
+This section documents a selection of use cases from three Dutch Digital Heritage Network members: [Van Gogh Worldwide](https://vangoghworldwide.org), [Brabants Erfgoed](https://www.brabantserfgoed.nl) and [Oorlogsbronnen](https://www.brabantserfgoed.nl).
+They help constructing a reference set of business processes that are common in a network of digital heritage stakeholders.
+The result is described in [[#businessprocesses]].
+
+Because ErfgoedPod project attempts at making digital heritage more usable, the selected use cases deliberately take the perspective of the end-user applications or [=Service Portal=].
+Therefore, the [=Service Portal Providers=] were consulted with the following three questions:
+
+1. How do they discover datasets?
+2. How do they decide which of these datasets are relevant for their portal?
+3. How can the Dutch Digital Heritage Network design, in particular the [=Dataset Registry=], [=Knowledge Graph=], and [=Network of Terms=] actor roles, help this process?
+
+<table>
+<thead>
+  <tr>
+    <th>Use Case
+    <th>Discovery method
+    <th>relevancy criteria
+    <th>How can NDE support?
+  <tbody>
+  <tr>
+    <th> 
+    Van Gogh Worldwide
+    <td>
+    Manual effort by the [=Service Portal Provider =] based on a fixed list of [=cultural heritage institutions=]. 
+    <td>
+      <ul>
+      <li>Content: certified **artworks** of Vincent Van Gogh
+      <li>License: CC0
+      <li>Origin: known institutions registered with Van Gogh Worldwide
+      <li>Format: RDF using [Linked Art](https://linked.art/model/index.html)
+      </ul>
+    <td>
+    Automating the discovery and delivery of metadata on relevant artworks.
+    This includes enabling portals to select data using their relevancy criteria.
+  <tr>
+    <th> 
+    Brabants Erfgoed
+    <td>
+    Automatically via a regional aggregation platform Brabant Cloud, but without a discovery process.
+    <td>
+    Criteria are defined by the Brabant Cloud platform:
+      <ul>
+        <li>Content: cultural heritage objects or digital representations (eg., photos) of things located in the Brabant region.
+        <li>Origin: fixed list of known institutions. These are mostly located in the Noord-Brabant region and registered with Brabant Cloud, but they can also be situated outside.
+        <li>License: any license that allows dissemination through the platform.
+        <li>Data quality: datasets must reach a certain quality standard.
+      </ul>
+    <td>
+    Enabling the portal to find and select data using their relevancy criteria.
+  <tr>
+    <th> 
+    Oorlogsbronnen
+    <td>
+    <ul>
+        <li>Active: approaching organisations who have data on blind spots in the collection.
+        <li>Reactive: they are approached with datasets by their organisations in their partner network who seek exposure. 
+    <td>
+      <ul>
+        <li>Content: broad range of object surrounding the WWII time period. Based on theme, time or thesaurus references.
+        <li>Origin: fixed list of known institutions. These are mostly located in the Noord-Brabant region and registered with Brabant Cloud, but they can also be situated outside.
+        <li>License: any license that allows dissemination through the platform.
+        <li>Data quality: datasets must reach a certain quality standard.
+      </ul>
+    <td>
+    A more dynamic identification of sources that make (substantial) references to WWII (or similar) terms.<br><br>
+    In a later stage:
+    performing a full-text analysis of datasets to identify terms from the WWII thesaurus.
+    Stimulate the detailed description of datasets.
+    Alert the portals when discovering metadata in a certain timeperiod. 
+</table>
+
+Business processes {#businessprocesses}
+=======================================================
+
+This section described the different business processes that network [=actors=] in a specific [=role=] should be able to execute in a Decentralized Digital Heritage Network.
+To that end, they cover processes from the perspective of the following actor-role combinations:
+
+1. the Cultural Heritage Institutions and Term Source Providers that act as [=maintainers=]. A single organization can be both actors, but this is not always the case;
+2. organizations that take up the [=Dataset Registry=] Function;
+3. organizations that act as a [=Network of Terms=].
+4. organizations that act as a [=Knowledge Graph=].
+
+Each business process (BP1 - 10) is described as a high-level description, followed by a more detailed description of the implementation details. 
+
+## Perspective of the Cultural Heritage Institution
+
+This section takes an internal perspective on the [=Cultural Heritage Institution=].
+This includes business processes that only affect actors inside a single institution and are often of preparational or operational nature such as setting up a software component. 
+
+### (BP1) Initialize a Digital Heritage Pod from a Solid data pod
+
+A [=cultural heritage institution=] want to participate in the (decentralized) Dutch Digital Heritage Network. 
+Therefore, a Solid data pod is required to serve as main exchange hub for metadata about [=cultural heritage objects=]. 
+
+1.  A [=maintainer=], who is employed at the institution, creates a data pod using an existing service or by hosting a Solid server locally.
+2.  Next, the [=maintainer=] prepares this data pod by creating two resources: 
+    - an [=inbox=] resource in order to receive notification from other actors in the network
+    - an eventlog resource to publish a list of events that impacted the lifecycle of the [=cultural heritage objects=] (eg. an object was created, registered, archived, deleted, etc.).
+3. The Solid data pod is now a compliant [=Digital Heritage Pod=] and the [=cultural heritage institution=] can paritipate in the network.
+
+### (BP2) Enabling automation of business processes by initializing an orchestration service
+
+A [=cultural heritage institution=] requires interaction with other network actors to execute their business processes.
+Rather than manually executing the consecutive steps of such process, 
+an institution’s [=maintainer=] can setup an [=Orchestrator=] component to automate such tasks.  
+
+1. A [=maintainer=], who is employed at the institution, creates an [=orchestrator=] instance using an existing service or by running it locally as a background process.
+2. The [=maintainer=] supplies the [=orchestrator=] instance with the location of its [=inbox=] resource, so the [=orchestrator=] is able to read notifications that might trigger a business process.
+3. Next, the [=orchestrator=] requires a machine-readable version of all the business processes that the [=cultural heritage institution=] wants to execute on the network.
+4. Once the orchestrator has acknowledged a successful reception of the inbox and the business processes, the initialization is complete.
+
+
+### (BP3) Notifiying institutions about enrichments
+
+Two [=cultural heritage institutions=] can also improve the interconnectedness of their collections in a reciprocal discovery process.
+Thereby, it facilitates the creation of links, backlinks or augmented metadata between [=cultural heritage objects=]. 
+
+1. A [=cultural heritage institution=] (A) adds information (eg. a link) about a [=cultural heritage object=] to an existing dataset.
+2. The A [=cultural heritage institution=] (A) notifies a target [=cultural heritage institution=] (B) that it has intomation about possible [=cultural heritage objects=] in their collection.
+4. [=Cultural heritage institution=] (B) then adds this information or backlinks to the [=cultural heritage objects=] of [=cultural heritage institution=] (A).
+
+
+## Perspective from the Cultural Heritage Institution interacting with the Dataset Registry
+
+This section takes the perspective of an [=Cultural Heritage Institution=] interacting with a [=Dataset Registry=] Service, which implements the design of the [Dataset Registry-function](https://docs.google.com/document/d/1-E4DIwlzbL8Esv5YtHbVUXkT_U3pCprFDSI-hjiKf90/edit?ts=5fbd2dcd#) using the Solid and ResearcherPod architecture.
+This entails business processes that are shared between both parties where the institution is requesting a service (ie. adding, updating or removing dataset summaries from the dataset registry) and the [=Dataset Registry=] responding to that request.
+The latter includes the possible outcome of the performed service.
+
+### (BP3) A Cultural Heritage Institution registers itself to a Dataset Registry ### {#BP3}
+
+A [=dataset registry=] service collects descriptions of datasets ([=metadata dataset=]) from [=cultural heritage institutions=].
+Based on this information, the dataset registry service can navigate a [=consumer=] to the [=digital heritage pods=] that store relevant datasets.
+However, in order to achieve this, an [=cultural heritage institution=] needs to be known and trusted by the [=dataset registry=] service.
+
+1. A [=Cultural Heritage Institution=] maintains a machine-readable [=organisation profile=] that contains a basic description of the institution.
+2. A [=maintainer=], who is employed at the institution, submits a registration request to the [=dataset registry=] service containing a link to the profile. 
+3. When processing the request, the dataset registry downloads the [=organisation profile=] and verifies its eligibility to the service.
+4. If the registration of the [=cultural heritage institution=] is accepted, the [=dataset registry=] service adds the institution to the list of registered dataset [=maintainers=] and informs the institution of a successful registration.
+
+### (BP4) A Cultural Heritage Institution registers a new Dataset with the Dataset Registry ### {#BP4}
+
+Once a [=cultural heritage institution=] is registered with a [=dataset registry=] service, 
+it can add dataset descriptions or [=metadata dataset=] to this service.
+
+1. A [=maintainer=], who is employed at the institution, notifies the [=dataset registry=] service that a new dataset distribution is available. The [=maintainer=] supplies a link to the [=metadata dataset=]. 
+2. The [=dataset registry=] service checks whether the [=cultural heritage institution=] is registered. If so, it downloads the [=metadata dataset=] adds it to its index to enable search.
+3. When the indexing is done, the [=dataset registry=] service informs the [=cultural heritage institution=] that the dataset is part of the [=dataset registry=] service.
+
+### (BP6) A Cultural Heritage Institution updates a registered Dataset in the Dataset Registry ### {#BP5}
+
+A [=cultural heritage institution=] can release a new version of an former dataset that is already registered with a [=dataset registry=] service.
+In that case, it needs to reflect the update in the [=dataset registry=] service.
+
+1. A [=maintainer=], who is employed at the institution, notifies the [=dataset registry=] service that a new dataset distribution of a registered dataset is available. The [=maintainer=] supplies a link to the updated [=metadata dataset=]. 
+2. The [=dataset registry=] service checks whether the [=cultural heritage institution=] is registered. If so, it downloads the [=metadata dataset=] and replaces the old version in the search index.
+3. When the indexing is done, the [=dataset registry=] service informs the [=cultural heritage institution=] that the dataset has been updated in the [=dataset registry=] service.
+
+## Perspective Knowledge Graph / Network Of Terms - Dataset Registry
+
+This section takes the perspective of the interaction between the [=Dataset Registry=] Service and the applications [=Knowledge Graph=] and [=Network of Terms=].
+This entails business processes where both services notify eachother about important events. 
+Hence, these processes are often initiated by the completion of another business process (eg. one between the institution and the dataset registry). 
+
+### (BP7) A Knowledge Graph or Network of Terms subscribes to a topic
+
+The [=Knowledge Graph=] and [=Network of Terms=] construct topic-oriented sets of metadata by collecting relevant metadata from the network.
+In case of the [=Knowledge Graph=], these sets are about [=cultural heritage objects=], and in case of the [=Network of Terms=], these sets are about [=term sources=].
+
+Both applications need to discover [=datasets=] from [=cultural heritage institutions=] that have data relevant to their topic.
+Therefore, they rely on the [=dataset registry=] service to help them narrow the search space based on the [=metadata dataset=] and point them to the dataset locations. 
+
+1. A [=Knowledge Graph=] or [=Network of Terms=] sends a subscription request on a certain topic to the [=dataset registry=] service.
+2. The [=dataset registry=] service adds the sender to the index entry of that topic and informs them of the subscription.
+
+### (BP8) A Knowledge Graph discovers a dataset related to a subscribed topic
+
+1. When the [=dataset registry=] service receives a new or updated dataset description ([=Metadata Dataset=]) via [[#BP4]] or [[#BP5]], it identifies the topics that are related to the [=dataset=]. 
+2. The [=dataset registry=] service cross-checks each topic to the subscription index. 
+3. If [=Knowledge Graph=] applications are subscribed to any of the topics, they are notified that a dataset is relevant to their search. A link to the dataset is included in the notification.
+4. When receiving this notification, the [=Knowledge Graph=] extracts the link and downloads the [=Dataset=] from the [=Cultural Heritage Institution=]'s [=Digital Heritage Pod=].
+5. The [=Knowledge Graph=] processes the dataset and incorporates it in the topic-oriented set of metadata.
+
+### (BP9) Discovering a Term source
+
+1. When the [=dataset registry=] service receives a new or updated term source description ([=Metadata Term Source=]) via [[#BP4]] or [[#BP5]],
+          it identifies the topics that are related to the [=term source=]. 
+2. The [=dataset registry=] service cross-checks each topic to the subscription index. 
+3. If [=Network of Terms=] applications are subscribed to any of the topics, they are notified that a [=term source=] is relevant to their search. A link to the [=term source=] is included in the notification.
+4. When receiving this notification, the [=Network of Terms=] extracts the link and downloads the [=term source=] from the [=Cultural Heritage Institution=]'s [=Digital Heritage Pod=].
+5. The [=Network of Terms=] processes the [=term source=] and incorporates it in its search index.    
+  
+
+<pre class=biblio>
+{
+	"solid-oidc": {
+		"authors": [
+			"Aaron Coburn (Inrupt)",
+			"elf Pavlik",
+			"Dmitri Zagidulin" 
+		],
+		"href": "https://solid.github.io/authentication-panel/solid-oidc/",
+		"title": "SOLID-OIDC",
+		"status": "Editor’s Draft",
+		"publisher": "Solid project",
+		"deliveredBy": [
+			"https://www.w3.org/community/solid/"
+		]
+	},
+	"solid-protocol": {
+		"authors": [
+			"Sarven Capadisli",
+			"Tim Berners-Lee",
+			"Ruben Verborgh",
+			"Kjetil Kjernsmo",
+			"Justin Bingham",
+			"Dmitri Zagidulin"
+		],
+		"href": "https://solidproject.org/TR/protocol/",
+		"title": "The Solid Protocol",
+		"status": "Editor’s Draft",
+		"publisher": "Solid project",
+		"deliveredBy": [
+			"https://www.w3.org/community/solid/"
+		]
+	},
+	"requirements-datasets": {
+		"authors": [
+			"David de Boer",
+			"Bob Coret"
+		],
+		"href": "https://netwerk-digitaal-erfgoed.github.io/requirements-datasets",
+		"title": "Requirements for Datasets",
+		"status": "Living Standard",
+		"publisher": "Netwerk Digitaal Erfgoed",
+		"deliveredBy": [
+			"https://netwerkdigitaalerfgoed.nl"
+		]
+	},
+	"architecture-nde": {
+		"authors": [
+			"Miel Vander Sande"
+		],
+		"href": "https://erfgoedpod.github.io/architecture",
+		"title": "Architecture Decentralized Digital Heritage Network",
+		"status": "Living Standard",
+		"publisher": "Netwerk Digitaal Erfgoed & meemoo",
+		"deliveredBy": [
+			"https://netwerkdigitaalerfgoed.nl"
+		]
+	}
+}
+</pre>
